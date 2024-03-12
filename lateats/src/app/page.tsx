@@ -4,28 +4,34 @@ import MobileHeader from "./components/mobile-header";
 import RowSection from "./components/row-section";
 import SearchBar from "./components/searchbar";
 import WebHeader from "./components/web-header";
+import Map from "./components/map";
 
 export default async function Home() {
   return (
     <div className="bg-white min-h-screen">
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <WebHeader />
       </div>
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <MobileHeader />
       </div>
-      <div className="mx-8 -mt-5">
+      <div className="mx-8 -mt-5 lg:max-w-80">
         <SearchBar />
       </div>
-      <div>
-        <ListSection header="Near you" restaurants={sampleRestaurants} />
-        <ListSection header="Popular" restaurants={sampleRestaurants} />
-        <RowSection
-          header="Highest Rated"
-          restaurants={sampleRestaurants.slice(0, 3)}
-        />
+      <div className="lg:flex">
+        <div
+          className="lg:max-w-96 lg:overflow-y-scroll h-screen -mt-7 pt-7"
+          style={{ height: "calc(100vh - 7rem)" }}
+        >
+          <ListSection header="Near you" restaurants={sampleRestaurants} />
+          <ListSection header="Popular" restaurants={sampleRestaurants} />
+          <RowSection header="Highest Rated" restaurants={sampleRestaurants} />
+        </div>
+        <div className="flex-grow hidden lg:block -mt-7">
+          <Map /> 
+        </div>
       </div>
-      <div className="sticky bottom-0 w-full">
+      <div className="sticky bottom-0 w-full lg:hidden">
         <MobileFooter />
       </div>
     </div>
@@ -34,6 +40,7 @@ export default async function Home() {
 
 const sampleRestaurants = [
   {
+    id: 1,
     name: "Food Haven",
     street: "123 Main Street",
     longitude: -73.987432,
@@ -45,6 +52,7 @@ const sampleRestaurants = [
     picture: "https://picsum.photos/200/300",
   },
   {
+    id: 2,
     name: "Spice Paradise",
     street: "456 Oak Avenue",
     longitude: -73.982345,
@@ -56,6 +64,7 @@ const sampleRestaurants = [
     picture: "https://picsum.photos/200/300",
   },
   {
+    id: 3,
     name: "Sushi Delight",
     street: "789 Elm Road",
     longitude: -73.978123,
@@ -67,6 +76,7 @@ const sampleRestaurants = [
     picture: "https://picsum.photos/200/300",
   },
   {
+    id: 4,
     name: "Food Haven",
     street: "123 Main Street",
     longitude: -73.987432,
@@ -78,6 +88,7 @@ const sampleRestaurants = [
     picture: "https://picsum.photos/200/300",
   },
   {
+    id: 5,
     name: "Spice Paradise",
     street: "456 Oak Avenue",
     longitude: -73.982345,
@@ -89,6 +100,7 @@ const sampleRestaurants = [
     picture: "https://picsum.photos/200/300",
   },
   {
+    id: 6,
     name: "Sushi Delight",
     street: "789 Elm Road",
     longitude: -73.978123,
@@ -100,6 +112,7 @@ const sampleRestaurants = [
     picture: "https://picsum.photos/200/300",
   },
   {
+    id: 7,
     name: "Food Haven",
     street: "123 Main Street",
     longitude: -73.987432,
@@ -111,6 +124,7 @@ const sampleRestaurants = [
     picture: "https://picsum.photos/200/300",
   },
   {
+    id: 8,
     name: "Spice Paradise",
     street: "456 Oak Avenue",
     longitude: -73.982345,
@@ -122,6 +136,7 @@ const sampleRestaurants = [
     picture: "https://picsum.photos/200/300",
   },
   {
+    id: 9,
     name: "Sushi Delight",
     street: "789 Elm Road",
     longitude: -73.978123,

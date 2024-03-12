@@ -1,4 +1,5 @@
 type Restaurant = {
+    id: number;
     name: string;
     street: string;
     longitude: number;
