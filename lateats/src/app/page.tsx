@@ -20,8 +20,8 @@ export default async function Home() {
       </div>
       <div className="lg:flex">
         <div
-          className="lg:max-w-96 lg:overflow-y-scroll h-screen -mt-7 pt-7 mb-80 lg:mb-0"
-          style={{ height: "calc(100vh - 7rem)" }}
+          className="lg:max-w-96 lg:overflow-y-scroll -mt-7 pt-7 lg:mb-0"
+          style={{ height: "lg:calc(100vh - 7rem)" }}
         >
           <ListSection header="Near you" restaurants={sampleRestaurants} />
           <ListSection header="Popular" restaurants={sampleRestaurants} />
