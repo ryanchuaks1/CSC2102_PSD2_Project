@@ -20,7 +20,7 @@ export default function ListSection({
     <div className="p-4">
       <div className="text-3xl font-semibold text-primary">{header}</div>
       {restaurants.slice(0, visibleRestaurants).map((restaurant) => (
-        <div className="my-3" key={restaurant.name}>
+        <div className="my-3" key={restaurant.id}>
           <div className="flex justify-between">
             <div className="text-left">
               <div className="text-lg font-medium">{restaurant.name}</div>
