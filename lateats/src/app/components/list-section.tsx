@@ -1,6 +1,10 @@
 "use client";
 
+"use client";
+
+import Link from "next/link";
 import { useState } from "react";
+
 
 export default function ListSection({
   header,
@@ -20,27 +24,29 @@ export default function ListSection({
     <div className="p-4">
       <div className="text-3xl font-semibold text-primary">{header}</div>
       {restaurants.slice(0, visibleRestaurants).map((restaurant) => (
-        <div className="my-3" key={restaurant.id}>
-          <div className="flex justify-between">
-            <div className="text-left">
-              <div className="text-lg font-medium">{restaurant.name}</div>
-              <div className="">{restaurant.cuisine}</div>
-              <div className="">{restaurant.street}</div>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-medium text-primary">
-                {restaurant.discount}% off
+        <Link href={`/shop/${restaurant.id}`} key={restaurant.id}> 
+          <div className="my-3 hover:bg-gray-100">
+            <div className="flex justify-between">
+              <div className="text-left">
+                <div className="text-lg font-medium">{restaurant.name}</div>
+                <div className="">{restaurant.cuisine}</div>
+                <div className="">{restaurant.street}</div>
               </div>
-              <div className="">
-                {restaurant.closingtime.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }).toLocaleLowerCase()}
+              <div className="text-right">
+                <div className="text-2xl font-medium text-primary">
+                  {restaurant.discount}% off
+                </div>
+                <div className="">
+                  {restaurant.closingtime.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }).toLocaleLowerCase()}
+                </div>
               </div>
             </div>
+            <hr className="my-1 h-0.5 border-t-0 bg-gray-200 w-full"></hr>
           </div>
-          <hr className="my-1 h-0.5 border-t-0 bg-gray-200 w-full"></hr>
-        </div>
+        </Link>
       ))}
       {visibleRestaurants < restaurants.length && (
         <button

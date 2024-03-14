@@ -24,7 +24,7 @@ export default function Map({ restaurants }: { restaurants: Restaurant[] }) {
 
   return (
     <div
-      className="hidden lg:block absolute lg:static top-0 left-0 lg:inset-0 z-50 w-screen lg:w-full"
+      className="hidden lg:block fixed lg:static top-0 left-0 lg:inset-0 z-50 w-screen lg:w-full"
       id="map"
     >
       <MapContainer className="h-[88vh]" center={position} zoom={12}>
@@ -42,7 +42,7 @@ export default function Map({ restaurants }: { restaurants: Restaurant[] }) {
             ></Marker>
           ))}
       </MapContainer>
-      <div className="bg-white px-4 shadow-inner shaodw-lg h-[12vh] flex justify-center p-4">
+      <div className="bg-white px-4 shadow-inner shaodw-lg h-[12vh] flex justify-center p-4 lg:hidden">
         <button
           onClick={openMap}
           className="p-4 m-auto text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md text-center w-full"

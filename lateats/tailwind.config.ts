@@ -18,7 +18,7 @@ const config: Config = {
       },
     },
     fontFamily: {
-      serif: ["Playfair_Display", "serif"],
+      serif: ["Rockwell", "serif"],
     },
   },
   plugins: [],
