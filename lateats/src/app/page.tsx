@@ -4,9 +4,13 @@ import MobileHeader from "./components/mobile-header";
 import RowSection from "./components/row-section";
 import SearchBar from "./components/searchbar";
 import WebHeader from "./components/web-header";
-import Map from "./map/page";
+import dynamic from 'next/dynamic';
 
 export default function Home() {
+  const Map = dynamic(() => import('./components/osm-map'), {
+    ssr: false,
+  });
+
   return (
     <div className="bg-white min-h-screen">
       <div className="hidden lg:block">
@@ -24,7 +28,7 @@ export default function Home() {
           <ListSection header="Popular" restaurants={sampleRestaurants} />
           <RowSection header="Highest Rated" restaurants={sampleRestaurants} />
         </div>
-        <div className="flex-grow hidden lg:block -mt-7">
+        <div className="lg:flex-grow lg:block lg:-mt-7">
           <Map restaurants={sampleRestaurants} />
         </div>
       </div>
