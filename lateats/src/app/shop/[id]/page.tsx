@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MobileHeader from "./components/mobile-header";
+import MobileHeader from "./components/shop-header";
 import Link from "next/link";
 import ItemGrid from "./components/item-grid";
+import ShopInfo from "./components/shop-info";
+import ShopHeader from "./components/shop-header";
 
 export default function Shop({ params }: { params: { id: string } }) {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -20,27 +22,17 @@ export default function Shop({ params }: { params: { id: string } }) {
     <div>
       {restaurant ? (
         <div className="min-h-screen bg-white">
-          <MobileHeader
+          <ShopHeader
             name={restaurant.name}
             cuisine={restaurant.cuisine}
             street={restaurant.street}
           />
-          <div className="text-center text-primary text-2xl font-semibold pt-4">
-            Discounted Items
-          </div>
-          <div className="text-center font-medium">
-            Closes:{" "}
-            {restaurant.closingtime
-              .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-              .toLocaleLowerCase()}
-          </div>
-          <div className="text-center font-medium">
-            {restaurant.discount}% off starts at:{" "}
-            {restaurant.discounttime
-              .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-              .toLocaleLowerCase()}
-          </div>
-          <div className="grid grid-cols-2 m-4">
+          <ShopInfo
+            closingtime={restaurant.closingtime}
+            discount={restaurant.discount}
+            discounttime={restaurant.discounttime}
+          />
+          <div className="m-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {foodItems.map((item) => (
               <ItemGrid
                 key={item.id}
@@ -49,7 +41,7 @@ export default function Shop({ params }: { params: { id: string } }) {
               />
             ))}
           </div>
-          <div className="w-screen h-auto sticky bottom-0 p-4 flex justify-center">
+          <div className="w-screen h-auto sticky bottom-0 p-4 flex justify-center lg:hidden">
             <Link
               href="/"
               className="p-4 text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md w-full text-center"

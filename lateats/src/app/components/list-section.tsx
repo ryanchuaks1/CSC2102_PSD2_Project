@@ -25,7 +25,7 @@ export default function ListSection({
       <div className="text-3xl font-semibold text-primary">{header}</div>
       {restaurants.slice(0, visibleRestaurants).map((restaurant) => (
         <Link href={`/shop/${restaurant.id}`} key={restaurant.id}> 
-          <div className="my-3 hover:bg-gray-100">
+          <div className="my-3 hover:bg-gray-100 transition-all duration-200">
             <div className="flex justify-between">
               <div className="text-left">
                 <div className="text-lg font-medium">{restaurant.name}</div>
