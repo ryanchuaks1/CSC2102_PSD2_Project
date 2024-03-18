@@ -17,7 +17,8 @@ const MONGO_URI = `mongodb://${Mongo.username}:${Mongo.password}@${Mongo.host}:$
 
 // Create the Express app
 const app = express();
-const port = 5000;
+const PORT = 5000;
+const HOST = '0.0.0.0';
 
 app.use(bodyParser.json());
 
@@ -41,6 +42,10 @@ const closeDB = () => {
     console.log('Closed MongoDB connection.');
   }
 };
+
+app.get('/', (request, response) => {
+  response.send('Hello, World!');
+});
 
 // Add a new shop
 app.post('/api/addShop', async (req, res) => {
@@ -128,8 +133,8 @@ app.get('/api/getShops', async (req, res) => {
 
 // Connect to MongoDB and start the server
 connectDB().then(() => {
-  app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  app.listen(PORT, HOST, () => {
+    console.log('Server is running on http://${HOST}:${PORT}');
   });
 });
 
