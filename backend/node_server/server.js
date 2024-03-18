@@ -131,6 +131,50 @@ app.get('/shops/index', cors(), async (req, res) => {
   }
 });
 
+app.get('/shops/nearby', cors(), async (req, res) => {
+  const {longitude, latitude} = req.query;
+  const shopsCollection = db.collection('shops');
+
+  try {
+    const long = parseFloat(longitude);
+    const lat = parseFloat(latitude);
+
+    //Getting the nearby shops query
+    const range = 0.1;
+    const query = {
+      longitude: { $gte: long - range, $lte: long + range },
+      latitude: { $gte: lat - range, $lte: lat + range }
+    }
+
+    const nearbyShops = await shopsCollection.find(query).toArray();
+
+    res.status(200).json({ body: nearbyShops });
+  } catch (error) {
+    console.error('Error getting nearby shops:', error);
+    res.status(500).json({ result: false, message: 'Internal server error' });
+  }
+});
+
+app.get('/shops/top', cors(), async (req, res) => {
+  const shopsCollection = db.collection('shops');
+
+  try {
+    const topShopsPipeline = [
+      { $sort: { rating: -1 } }, // Sort by rating in descending order
+      { $limit: 50 }, // Limit to the top 50 shops
+      { $sample: { size: 10 } } // Randomly select 10 entries from the top 50
+    ];
+
+    const topRandomShops = await shopsCollection.aggregate(topShopsPipeline).toArray();
+
+    res.status(200).json({ body: topRandomShops });
+  } catch (error) {
+    console.error('Error getting top shops:', error);
+    res.status(500).json({ result: false, message: 'Internal server error' });
+  }
+});
+
+
 // Connect to MongoDB and start the server
 connectDB().then(() => {
   app.listen(PORT, HOST, () => {

@@ -27,7 +27,7 @@ export default function Home() {
         <div className="lg:max-w-96 lg:overflow-y-scroll lg:h-[88vh] -mt-7 pt-7">
           <ListSection header="Near you"/>
           <ListSection header="Popular"/>
-          <RowSection header="Highest Rated" restaurants={sampleRestaurants} />
+          <RowSection header="Highest Rated" />
         </div>
         <div className="lg:flex-grow lg:block lg:-mt-7">
           <Map restaurants={sampleRestaurants} />
