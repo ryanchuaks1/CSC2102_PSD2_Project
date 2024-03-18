@@ -2,8 +2,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { MongoClient, ObjectId } = require('mongodb');
 
-// Define the MongoDB connection string
-const MONGO_URI ='mongodb://root:password@mongodb:27017/mongo_db?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=false';
+
+const Mongo = {
+  host: 'mongodb',
+  port: 27017,
+  username: 'root',
+  password: 'example',
+  authSource: 'admin',
+  database: 'lateats'
+};
+
+// Connection URI
+const MONGO_URI = `mongodb://${Mongo.username}:${Mongo.password}@${Mongo.host}:${Mongo.port}/?authSource=${Mongo.authSource}`;
 
 // Create the Express app
 const app = express();
@@ -17,7 +27,7 @@ let db;
 const connectDB = async () => {
   try {
     const client = await MongoClient.connect(MONGO_URI, { useNewUrlParser: true });
-    db = client.db();
+    db = client.db(Mongo.database);
     console.log('Connected to MongoDB successfully!');
   } catch (error) {
     console.error('Could not connect to MongoDB:', error);

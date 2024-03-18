@@ -2,9 +2,9 @@
     "name": "node_server",
     "version": "1.0.0",
     "description": "Node.js server with MongoDB and Express",
-    "main": "index.js",
+    "main": "server.js",
     "scripts": {
-        "start": "node index.js"
+        "start": "node server.js"
     },
     "keywords": [],
     "author": "",
