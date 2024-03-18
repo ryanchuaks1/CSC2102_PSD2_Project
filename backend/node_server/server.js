@@ -48,7 +48,7 @@ app.get('/', (request, response) => {
 });
 
 // Add a new shop
-app.post('/api/addShop', async (req, res) => {
+app.post('/shops/create', async (req, res) => {
   const shopData = req.body;
   const shopsCollection = db.collection('shops');
 
@@ -66,7 +66,7 @@ app.post('/api/addShop', async (req, res) => {
 });
 
 // Update an existing shop
-app.post('/api/updateShop', async (req, res) => {
+app.put('/shops/update', async (req, res) => {
   const shopData = req.body;
   const shopsCollection = db.collection('shops');
 
@@ -84,7 +84,7 @@ app.post('/api/updateShop', async (req, res) => {
 });
 
 // Delete a shop
-app.post('/api/deleteShop', async (req, res) => {
+app.delete('/shops/delete', async (req, res) => {
   const shopData = req.body;
   const shopsCollection = db.collection('shops');
 
@@ -99,7 +99,7 @@ app.post('/api/deleteShop', async (req, res) => {
 });
 
 // Get a specific shop
-app.get('/api/getShop/:shop_id', async (req, res) => {
+app.get('/shops/view/:shop_id', async (req, res) => {
   const shopId = req.params.shop_id;
   const shopsCollection = db.collection('shops');
 
@@ -118,7 +118,7 @@ app.get('/api/getShop/:shop_id', async (req, res) => {
 });
 
 // Get all shops
-app.get('/api/getShops', cors(), async (req, res) => {
+app.get('/shops/index', cors(), async (req, res) => {
   const shopsCollection = db.collection('shops');
 
   try {

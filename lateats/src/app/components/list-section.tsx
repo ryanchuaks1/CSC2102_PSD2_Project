@@ -137,7 +137,7 @@ export default function ListSection({
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://localhost:5000/api/getShops', {
+        const res = await fetch('http://localhost:5000/shops/index', {
           mode: 'cors',
         });
       
