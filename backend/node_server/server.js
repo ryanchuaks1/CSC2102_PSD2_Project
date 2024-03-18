@@ -23,11 +23,12 @@ const HOST = '0.0.0.0';
 app.use(bodyParser.json());
 
 let db;
+let client
 
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    const client = await MongoClient.connect(MONGO_URI, { useNewUrlParser: true });
+    client = await MongoClient.connect(MONGO_URI, { useNewUrlParser: true });
     db = client.db(Mongo.database);
     console.log('Connected to MongoDB successfully!');
   } catch (error) {
@@ -48,20 +49,51 @@ app.get('/', (request, response) => {
 });
 
 // Add a new shop
-app.post('/shops/create', cors(), async (req, res) => {
-  const shopData = req.body;
+app.options('/shops/account/create', cors());
+app.post('/shops/account/create', cors(), async (req, res) => {
+  const data = req.body;
   const shopsCollection = db.collection('shops');
+  const usersCollection = db.collection('users');
+  let curr_shopId; 
 
+  const session = client.startSession();
   try {
-    const result = await shopsCollection.insertOne({
-      shopName: shopData.shopName,
-      location: shopData.location,
+    
+    //Insert Shop/Restaurant
+    const insertResult = await shopsCollection.insertOne({
+      name: data.shop.name,
+      street: data.shop.street,
+      longitude: data.shop.longitude,
+      latitude: data.shop.latitude,
+      cuisine: data.shop.cuisine,
+      discounttime: data.shop.discounttime,
+      closingtime: data.shop.closingtime,
+      discount: data.shop.discount,
+      rating: data.shop.rating,
+      picture: data.shop.picture,
     });
 
-    res.status(201).json({ result: true, message: 'Shop added successfully!' });
+    curr_shopId = insertResult.insertedId;
+
+    //Insert User
+    const userResult = await usersCollection.insertOne({
+      email: data.user.email,
+      password: data.user.password,
+      shop_id: curr_shopId,
+    });
+
+    if (!userResult.insertedId) {
+      throw new Error('Failed to insert user');
+    }
+
+    res.status(201).json({ result: true, message: 'Shop and user added successfully!' });
   } catch (error) {
     console.error('Error adding shop:', error);
     res.status(500).json({ result: false, message: 'Internal server error' });
+    if (curr_shopId) {
+      // If an error occurred and a shop was inserted, delete the inserted shop
+      await shopsCollection.deleteOne({ _id: curr_shopId });
+    }
   }
 });
 

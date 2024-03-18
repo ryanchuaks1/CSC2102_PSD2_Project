@@ -18,3 +18,10 @@ type FoodItem = {
   price: number;
   image: string;
 };
+
+type Account = {
+  id: number;
+  email: string;
+  password: string;
+  restaurantId: number;
+};
