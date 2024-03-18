@@ -48,7 +48,7 @@ app.get('/', (request, response) => {
 });
 
 // Add a new shop
-app.post('/shops/create', async (req, res) => {
+app.post('/shops/create', cors(), async (req, res) => {
   const shopData = req.body;
   const shopsCollection = db.collection('shops');
 
@@ -66,7 +66,7 @@ app.post('/shops/create', async (req, res) => {
 });
 
 // Update an existing shop
-app.put('/shops/update', async (req, res) => {
+app.put('/shops/update', cors(), async (req, res) => {
   const shopData = req.body;
   const shopsCollection = db.collection('shops');
 
@@ -84,7 +84,7 @@ app.put('/shops/update', async (req, res) => {
 });
 
 // Delete a shop
-app.delete('/shops/delete', async (req, res) => {
+app.delete('/shops/delete', cors(), async (req, res) => {
   const shopData = req.body;
   const shopsCollection = db.collection('shops');
 
@@ -99,7 +99,7 @@ app.delete('/shops/delete', async (req, res) => {
 });
 
 // Get a specific shop
-app.get('/shops/view/:shop_id', async (req, res) => {
+app.get('/shops/view/:shop_id', cors(), async (req, res) => {
   const shopId = req.params.shop_id;
   const shopsCollection = db.collection('shops');
 
