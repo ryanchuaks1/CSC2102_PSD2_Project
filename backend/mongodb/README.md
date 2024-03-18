@@ -4,7 +4,7 @@ To test your Express server and the CRUD operations, you can use tools like `cur
 
    - **Get all shops:**
      ```bash
-     curl http://127.0.0.1:5000/api/getShops
+     curl http://127.0.0.1:5000/shops/index
      ```
 
    - **Create a new shop:**
