@@ -1,15 +1,15 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { MongoClient, ObjectId } = require('mongodb');
-const cors = require('cors');
+const express = require("express");
+const bodyParser = require("body-parser");
+const { MongoClient, ObjectId } = require("mongodb");
+const cors = require("cors");
 
 const Mongo = {
-  host: 'mongodb',
+  host: "mongodb",
   port: 27017,
-  username: 'root',
-  password: 'example',
-  authSource: 'admin',
-  database: 'lateats'
+  username: "root",
+  password: "example",
+  authSource: "admin",
+  database: "lateats",
 };
 
 // Connection URI
@@ -18,21 +18,22 @@ const MONGO_URI = `mongodb://${Mongo.username}:${Mongo.password}@${Mongo.host}:$
 // Create the Express app
 const app = express();
 const PORT = 5000;
-const HOST = '0.0.0.0';
+const HOST = "0.0.0.0";
 
 app.use(bodyParser.json());
+app.use(cors());
 
 let db;
-let client
+let client;
 
 // Connect to MongoDB
 const connectDB = async () => {
   try {
     client = await MongoClient.connect(MONGO_URI, { useNewUrlParser: true });
     db = client.db(Mongo.database);
-    console.log('Connected to MongoDB successfully!');
+    console.log("Connected to MongoDB successfully!");
   } catch (error) {
-    console.error('Could not connect to MongoDB:', error);
+    console.error("Could not connect to MongoDB:", error);
   }
 };
 
@@ -40,25 +41,24 @@ const connectDB = async () => {
 const closeDB = () => {
   if (db) {
     db.close();
-    console.log('Closed MongoDB connection.');
+    console.log("Closed MongoDB connection.");
   }
 };
 
-app.get('/', (request, response) => {
-  response.send('Hello, World!');
+app.get("/", (request, response) => {
+  response.send("Hello, World!");
 });
 
 // Add a new shop
-app.options('/shops/account/create', cors());
-app.post('/shops/account/create', cors(), async (req, res) => {
+app.options("/shops/account/create", cors());
+app.post("/shops/account/create", cors(), async (req, res) => {
   const data = req.body;
-  const shopsCollection = db.collection('shops');
-  const usersCollection = db.collection('users');
-  let curr_shopId; 
+  const shopsCollection = db.collection("shops");
+  const usersCollection = db.collection("users");
+  let curr_shopId;
 
   const session = client.startSession();
   try {
-    
     //Insert Shop/Restaurant
     const insertResult = await shopsCollection.insertOne({
       name: data.shop.name,
@@ -83,13 +83,15 @@ app.post('/shops/account/create', cors(), async (req, res) => {
     });
 
     if (!userResult.insertedId) {
-      throw new Error('Failed to insert user');
+      throw new Error("Failed to insert user");
     }
 
-    res.status(201).json({ result: true, message: 'Shop and user added successfully!' });
+    res
+      .status(201)
+      .json({ result: true, message: "Shop and user added successfully!" });
   } catch (error) {
-    console.error('Error adding shop:', error);
-    res.status(500).json({ result: false, message: 'Internal server error' });
+    console.error("Error adding shop:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
     if (curr_shopId) {
       // If an error occurred and a shop was inserted, delete the inserted shop
       await shopsCollection.deleteOne({ _id: curr_shopId });
@@ -98,9 +100,9 @@ app.post('/shops/account/create', cors(), async (req, res) => {
 });
 
 // Update an existing shop
-app.put('/shops/update', cors(), async (req, res) => {
+app.put("/shops/update", cors(), async (req, res) => {
   const shopData = req.body;
-  const shopsCollection = db.collection('shops');
+  const shopsCollection = db.collection("shops");
 
   try {
     const updateResult = await shopsCollection.updateOne(
@@ -108,32 +110,38 @@ app.put('/shops/update', cors(), async (req, res) => {
       { $set: { shopName: shopData.shopName, location: shopData.location } }
     );
 
-    res.status(201).json({ result: true, message: 'Shop updated successfully!' });
+    res
+      .status(201)
+      .json({ result: true, message: "Shop updated successfully!" });
   } catch (error) {
-    console.error('Error updating shop:', error);
-    res.status(500).json({ result: false, message: 'Internal server error' });
+    console.error("Error updating shop:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
 
 // Delete a shop
-app.delete('/shops/delete', cors(), async (req, res) => {
+app.delete("/shops/delete", cors(), async (req, res) => {
   const shopData = req.body;
-  const shopsCollection = db.collection('shops');
+  const shopsCollection = db.collection("shops");
 
   try {
-    const deleteResult = await shopsCollection.deleteOne({ _id: ObjectId(shopData.id) });
+    const deleteResult = await shopsCollection.deleteOne({
+      _id: ObjectId(shopData.id),
+    });
 
-    res.status(201).json({ result: true, message: 'Shop deleted successfully!' });
+    res
+      .status(201)
+      .json({ result: true, message: "Shop deleted successfully!" });
   } catch (error) {
-    console.error('Error deleting shop:', error);
-    res.status(500).json({ result: false, message: 'Internal server error' });
+    console.error("Error deleting shop:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
 
 // Get a specific shop
-app.get('/shops/view/:shop_id', cors(), async (req, res) => {
+app.get("/shops/view/:shop_id", cors(), async (req, res) => {
   const shopId = req.params.shop_id;
-  const shopsCollection = db.collection('shops');
+  const shopsCollection = db.collection("shops");
 
   try {
     const shop = await shopsCollection.findOne({ _id: ObjectId(shopId) });
@@ -141,31 +149,31 @@ app.get('/shops/view/:shop_id', cors(), async (req, res) => {
     if (shop) {
       res.status(200).json({ body: shop });
     } else {
-      res.status(404).json({ result: false, message: 'Shop not found' });
+      res.status(404).json({ result: false, message: "Shop not found" });
     }
   } catch (error) {
-    console.error('Error getting shop:', error);
-    res.status(500).json({ result: false, message: 'Internal server error' });
+    console.error("Error getting shop:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
 
 // Get all shops
-app.get('/shops/index', cors(), async (req, res) => {
-  const shopsCollection = db.collection('shops');
+app.get("/shops/index", cors(), async (req, res) => {
+  const shopsCollection = db.collection("shops");
 
   try {
     const allShops = await shopsCollection.find().toArray();
 
     res.status(200).json({ body: allShops });
   } catch (error) {
-    console.error('Error getting shops:', error);
-    res.status(500).json({ result: false, message: 'Internal server error' });
+    console.error("Error getting shops:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
 
-app.get('/shops/nearby', cors(), async (req, res) => {
-  const {longitude, latitude} = req.query;
-  const shopsCollection = db.collection('shops');
+app.get("/shops/nearby", cors(), async (req, res) => {
+  const { longitude, latitude } = req.query;
+  const shopsCollection = db.collection("shops");
 
   try {
     const long = parseFloat(longitude);
@@ -175,47 +183,101 @@ app.get('/shops/nearby', cors(), async (req, res) => {
     const range = 0.1;
     const query = {
       longitude: { $gte: long - range, $lte: long + range },
-      latitude: { $gte: lat - range, $lte: lat + range }
-    }
+      latitude: { $gte: lat - range, $lte: lat + range },
+    };
 
     const nearbyShops = await shopsCollection.find(query).toArray();
 
     res.status(200).json({ body: nearbyShops });
   } catch (error) {
-    console.error('Error getting nearby shops:', error);
-    res.status(500).json({ result: false, message: 'Internal server error' });
+    console.error("Error getting nearby shops:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
 
-app.get('/shops/top', cors(), async (req, res) => {
-  const shopsCollection = db.collection('shops');
+app.get("/shops/top", cors(), async (req, res) => {
+  const shopsCollection = db.collection("shops");
 
   try {
     const topShopsPipeline = [
       { $sort: { rating: -1 } }, // Sort by rating in descending order
       { $limit: 50 }, // Limit to the top 50 shops
-      { $sample: { size: 10 } } // Randomly select 10 entries from the top 50
+      { $sample: { size: 10 } }, // Randomly select 10 entries from the top 50
     ];
 
-    const topRandomShops = await shopsCollection.aggregate(topShopsPipeline).toArray();
+    const topRandomShops = await shopsCollection
+      .aggregate(topShopsPipeline)
+      .toArray();
 
     res.status(200).json({ body: topRandomShops });
   } catch (error) {
-    console.error('Error getting top shops:', error);
-    res.status(500).json({ result: false, message: 'Internal server error' });
+    console.error("Error getting top shops:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
 
+// Get a specific user
+app.post("/users/login/", cors(), async (req, res) => {
+  const { email, password } = req.body;
+  const usersCollection = db.collection("users");
+
+  try {
+    const user = await usersCollection.findOne({ email: email });
+    if (user) {
+      res.status(200).json({ body: user });
+    } else {
+      res.status(404).json({ result: false, message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error getting user:", error);
+  }
+});
+
+// Set token for user
+app.put("/users/token", cors(), async (req, res) => {
+  const { email, token } = req.body;
+  const usersCollection = db.collection("users");
+
+  try {
+    const updateResult = await usersCollection.updateOne(
+      { email: email },
+      { $set: { token: token } }
+    );
+
+    res.status(201).json({ result: true, message: "Token updated successfully!" });
+  } catch (error) {
+    console.error("Error updating token:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
+  }
+});
+
+// Get user by token
+app.get("/users/token/:token", cors(), async (req, res) => {
+  const token = req.params.token;
+  const usersCollection = db.collection("users");
+
+  try {
+    const user = await usersCollection.findOne({ token: token });
+    if (user) {
+      res.status(200).json({ body: user });
+    } else {
+      res.status(404).json({ result: false, message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error getting user:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
+  }
+});
 
 // Connect to MongoDB and start the server
 connectDB().then(() => {
   app.listen(PORT, HOST, () => {
-    console.log('Server is running on http://${HOST}:${PORT}');
+    console.log("Server is running on http://${HOST}:${PORT}");
   });
 });
 
 // Handle graceful shutdown
-process.on('SIGINT', () => {
+process.on("SIGINT", () => {
   closeDB();
   process.exit();
 });

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function WebHeader() {
   return (
     <div className="h-28 bg-primary px-6 py-8 flex justify-between">
@@ -10,7 +12,12 @@ export default function WebHeader() {
         Zero leftovers for f&b owners
       </div>
       <div>
-        <button className="bg-white text-primary font-semibold px-4 py-2 rounded-md text-xl">Stall Login</button>
+        <Link
+          href={"/login"}
+          className="bg-white text-primary font-semibold px-4 py-2 rounded-md text-xl"
+        >
+          Stall Login
+        </Link>
       </div>
     </div>
   );
