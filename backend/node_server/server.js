@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { MongoClient, ObjectId } = require('mongodb');
-
+const cors = require('cors');
 
 const Mongo = {
   host: 'mongodb',
@@ -118,7 +118,7 @@ app.get('/api/getShop/:shop_id', async (req, res) => {
 });
 
 // Get all shops
-app.get('/api/getShops', async (req, res) => {
+app.get('/api/getShops', cors(), async (req, res) => {
   const shopsCollection = db.collection('shops');
 
   try {

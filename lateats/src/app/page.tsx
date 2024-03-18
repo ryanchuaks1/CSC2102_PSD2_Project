@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import ListSection from "./components/list-section";
 import MobileFooter from "./components/mobile-footer";
 import MobileHeader from "./components/mobile-header";
@@ -10,6 +11,7 @@ export default function Home() {
   const Map = dynamic(() => import('./components/osm-map'), {
     ssr: false,
   });
+
 
   return (
     <div className="bg-white min-h-screen">
@@ -24,8 +26,8 @@ export default function Home() {
       </div>
       <div className="lg:flex">
         <div className="lg:max-w-96 lg:overflow-y-scroll lg:h-[88vh] -mt-7 pt-7">
-          <ListSection header="Near you" restaurants={sampleRestaurants} />
-          <ListSection header="Popular" restaurants={sampleRestaurants} />
+          <ListSection header="Near you" />
+          <ListSection header="Popular"/>
           <RowSection header="Highest Rated" restaurants={sampleRestaurants} />
         </div>
         <div className="lg:flex-grow lg:block lg:-mt-7">
@@ -38,6 +40,7 @@ export default function Home() {
     </div>
   );
 }
+ 
 
 const sampleRestaurants = [
   {
