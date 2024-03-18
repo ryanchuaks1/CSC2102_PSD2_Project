@@ -11,7 +11,7 @@ export default function WebHeader() {
         <br />
         Zero leftovers for f&b owners
       </div>
-      <div>
+      <div className="self-center">
         <Link
           href={"/login"}
           className="bg-white text-primary font-semibold px-4 py-2 rounded-md text-xl"

@@ -50,7 +50,7 @@ export default function Login() {
           .digest("hex");
         sessionStorage.setItem("token", token);
         // Update the user with this token
-        const res = await fetch("http://localhost:5000/users/update", {
+        const res = await fetch("http://localhost:5000/users/token", {
           method: "POST",
           mode: "cors",
           headers: {
@@ -61,6 +61,7 @@ export default function Login() {
             token: token,
           }),
         });
+        console.log("token set status:", res)
         // window.location.href = "/";
       } else {
         throw new Error("Login Failed");

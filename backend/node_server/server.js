@@ -234,7 +234,7 @@ app.post("/users/login/", cors(), async (req, res) => {
 });
 
 // Set token for user
-app.put("/users/token", cors(), async (req, res) => {
+app.post("/users/token", cors(), async (req, res) => {
   const { email, token } = req.body;
   const usersCollection = db.collection("users");
 
@@ -243,10 +243,15 @@ app.put("/users/token", cors(), async (req, res) => {
       { email: email },
       { $set: { token: token } }
     );
-
-    res.status(201).json({ result: true, message: "Token updated successfully!" });
+    if (updateResult.modifiedCount === 1) {
+      res
+        .status(200)
+        .json({ result: true, message: "Token set successfully!" });
+    } else {
+      res.status(404).json({ result: false, message: "User not found" });
+    }
   } catch (error) {
-    console.error("Error updating token:", error);
+    console.error("Error setting token:", error);
     res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
