@@ -1,6 +1,16 @@
+import ItemModal from "./item-modal";
+
 export default function ShopInfo({ restaurant }: { restaurant: Restaurant }) {
+  function toggleModel() {
+    const modal = document.getElementById("item-modal");
+    if (modal) {
+      modal.classList.toggle("hidden");
+    }
+  }
+
   return (
     <div className="lg:flex lg:p-6 lg:justify-between">
+      <ItemModal />
       <div className="hidden lg:block bg-primary p-4 rounded-md shadow-md">
         <div className="font-bold text-3xl text-white font-serif">
           {restaurant.name}
@@ -18,19 +28,23 @@ export default function ShopInfo({ restaurant }: { restaurant: Restaurant }) {
           Discounted Items
         </div>
         <div className="text-center font-medium">
-          Closes:{" "}
-          {restaurant.closingtime}
+          Closes: {restaurant.closingtime}
         </div>
         <div className="text-center font-medium">
           <span className="text-primary font-bold">{restaurant.discount}%</span>{" "}
-          off starts at:{" "}
-          {restaurant.discounttime}
+          off starts at: {restaurant.discounttime}
         </div>
       </div>
-      {/* edit shop button */}
-      <div className="hidden lg:flex">
-        <button className="p-4 text-2xl h-fit self-center font-semibold bg-primary text-white rounded-lg drop-shadow-md hover:bg-slate-50 hover:text-primary hover:border">
-          Edit Shop
+
+      <div className="self-center text-center mt-2">
+        <button className="px-4 py-2 text-2xl h-fit font-semibold bg-yellow-300 hover:bg-yellow-400 text-white rounded-lg drop-shadow-md mr-2">
+          Edit
+        </button>
+        <button
+          onClick={toggleModel}
+          className="px-4 py-2 text-2xl h-fit font-semibold bg-green-300 hover:bg-green-400 text-white rounded-lg drop-shadow-md"
+        >
+          Add
         </button>
       </div>
     </div>
