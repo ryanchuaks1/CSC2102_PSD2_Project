@@ -16,9 +16,11 @@ export default function WebHeader() {
 
   //logout function
   const logout = () => {
-    sessionStorage.removeItem("token");
-    console.log("Logged out");
-    window.location.reload(); // Add this line to refresh the page after logout
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.removeItem("token");
+      console.log("Logged out");
+      window.location.reload(); // Add this line to refresh the page after logout
+    }
   };
 
   return (
@@ -32,7 +34,7 @@ export default function WebHeader() {
         Zero leftovers for f&b owners
       </div>
       <div className="self-center">
-        {sessionStorage.getItem("token") ? (
+        {typeof window !== 'undefined' && window.sessionStorage.getItem("token") ? (
           <button
             onClick={logout}
             className="bg-white text-primary font-semibold px-4 py-2 rounded-md text-xl"
