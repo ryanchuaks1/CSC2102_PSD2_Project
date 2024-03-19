@@ -137,16 +137,21 @@ app.delete("/shops/delete", cors(), async (req, res) => {
   }
 });
 
-// Get a specific shop
+// Get a specific shop and all of its items
 app.get("/shops/view/:shop_id", cors(), async (req, res) => {
   const shopId = req.params.shop_id;
   const shopsCollection = db.collection("shops");
+  const itemsCollection = db.collection("items");
 
   try {
     const shop = await shopsCollection.findOne({ _id: ObjectId(shopId) });
+    const items = await itemsCollection.find({ shop_id: shopId }).toArray();
 
-    if (shop) {
-      res.status(200).json({ body: shop });
+    if (shop && items) {
+      res.status(200).json({ body: {
+        shop: shop,
+        items: items
+      } });
     } else {
       res.status(404).json({ result: false, message: "Shop not found" });
     }
@@ -272,6 +277,58 @@ app.get("/users/token/:token", cors(), async (req, res) => {
     res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
+
+app.post("/items/create", cors(), async (req, res) => {
+  const { shop_id, token, item_name, base_price, image_b64 } = req.body;
+  const usersCollection = db.collection("users");
+  
+  const itemsCollection = db.collection("items");
+
+  let item_id;
+
+  try {
+    const user = await usersCollection.findOne({ token: token });
+    if (!user) {
+      res.status(404).json({ result: false, message: "Invalid token" });
+    }
+
+    item_id = await usersCollection.insertOne({
+      name: item_name,
+      base_price: base_price,
+      image: image_b64,
+      shop_id: shop_id,
+    });
+
+    res
+      .status(201)
+      .json({ result: true, message: "Shop item added successfully!" });
+  } catch (error) {
+    console.error("Error adding shop:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
+    if (item_id) {
+      // If an error occurred and a item was inserted, delete the inserted item
+      await itemsCollection.deleteOne({ _id: item_id });
+    }
+  }
+});
+
+app.delete("/items/delete", cors(), async(req, res) => {
+  const itemData = req.body;
+  const itemsCollection = db.collection("items");
+
+  try {
+    const deleteResult = await itemsCollection.deleteOne({
+      _id: ObjectId(itemData.id),
+    });
+
+    res
+      .status(201)
+      .json({ result: true, message: "Shop deleted successfully!" });
+  } catch (error) {
+    console.error("Error deleting shop:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
+  }
+})
 
 // Connect to MongoDB and start the server
 connectDB().then(() => {
