@@ -3,7 +3,7 @@ version: '3.8'
 services:
   node_server:
     build:
-      context: ./node_server
+      context: ./backend/node_server
       dockerfile: Dockerfile
     container_name: node_server
     restart: always
@@ -41,7 +41,18 @@ services:
       - intranet
     depends_on:
       - mongodb
-
+  
+  # lateats:
+  #   build:
+  #     context: ./lateats
+  #     dockerfile: Dockerfile
+  #   container_name: lateats
+  #   restart: always
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - node_server
+  #   command: npm run dev
 
 networks:
   intranet:
