@@ -23,14 +23,10 @@ export default function Shop({ params }: { params: { id: string } }) {
       {restaurant ? (
         <div className="min-h-screen bg-white">
           <ShopHeader
-            name={restaurant.name}
-            cuisine={restaurant.cuisine}
-            street={restaurant.street}
+            restaurant={restaurant}
           />
           <ShopInfo
-            closingtime={restaurant.closingtime}
-            discount={restaurant.discount}
-            discounttime={restaurant.discounttime}
+            restaurant={restaurant}
           />
           <div className="m-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {foodItems.map((item) => (

@@ -1,25 +1,24 @@
 import Link from "next/link";
 
 export default function ShopHeader({
-  name,
-  cuisine,
-  street,
+  restaurant,
 }: {
-  name: string;
-  cuisine: string;
-  street: string;
+  restaurant: Restaurant;
 }) {
   return (
-    <div className="h-auto bg-primary p-4">
+    <div className="h-auto bg-primary p-6">
       <div className="flex flex-col lg:flex-row lg:justify-between">
-        <div className="font-bold text-4xl text-white mb-1 font-serif lg:place-self-center">
-          {name}
+        <div className="block lg:hidden font-bold text-4xl text-white mb-1 font-serif lg:place-self-center">
+          {restaurant.name}
         </div>
+        <Link href={"/"} className="hidden lg:block font-bold text-4xl text-white mb-1 font-serif lg:place-self-center">
+          Lateats Web
+        </Link>
         <div className="font-light text-xl text-white mb-2 block lg:hidden">
-          {cuisine}
+          {restaurant.cuisine}
         </div>
         <div className="font-medium text-lg text-white block lg:hidden">
-          {street}
+          {restaurant.street}
         </div>
         <div className="hidden lg:block text-center mt-3">
           <div className="font-light text-lg text-white leading-5">
