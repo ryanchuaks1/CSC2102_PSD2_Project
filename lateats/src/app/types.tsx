@@ -5,8 +5,8 @@ type Restaurant = {
   longitude: number;
   latitude: number;
   cuisine: string;
-  discounttime: Date;
-  closingtime: Date;
+  discounttime: string;
+  closingtime: string;
   discount: number;
   rating?: number;
   picture?: string;

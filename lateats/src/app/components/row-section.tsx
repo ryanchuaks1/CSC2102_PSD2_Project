@@ -18,8 +18,8 @@ export default function RowSection({
         longitude: 103.827432,
         latitude: 1.359817,
         cuisine: "Italian",
-        closingtime: new Date("2024-03-11T21:30:00"),
-        discounttime: new Date("2024-03-11T20:00:00"),
+        closingtime: "21:30",
+        discounttime: "20:00",
         discount: 10,
         rating: 4.5,
         picture: "https://picsum.photos/200/300",
@@ -31,8 +31,8 @@ export default function RowSection({
         longitude: 103.822345,
         latitude: 1.364219,
         cuisine: "Indian",
-        closingtime: new Date("2024-03-11T22:00:00"),
-        discounttime: new Date("2024-03-11T20:30:00"),
+        closingtime: "22:00",
+        discounttime: "20:30",
         discount: 15,
         rating: 4.2,
         picture: "https://picsum.photos/200/300",
@@ -44,8 +44,8 @@ export default function RowSection({
         longitude: 103.817123,
         latitude: 1.349632,
         cuisine: "Japanese",
-        closingtime: new Date("2024-03-11T20:45:00"),
-        discounttime: new Date("2024-03-11T19:30:00"),
+        closingtime: "20:45",
+        discounttime: "19:30",
         discount: 12,
         rating: 4.7,
         picture: "https://picsum.photos/200/300",
@@ -57,8 +57,8 @@ export default function RowSection({
         longitude: 103.832567,
         latitude: 1.369481,
         cuisine: "American",
-        closingtime: new Date("2024-03-11T21:00:00"),
-        discounttime: new Date("2024-03-11T19:45:00"),
+        closingtime: "21:00",
+        discounttime: "19:45",
         discount: 8,
         rating: 4.0,
         picture: "https://picsum.photos/200/300",
@@ -70,8 +70,8 @@ export default function RowSection({
         longitude: 103.81789,
         latitude: 1.355782,
         cuisine: "Asian Fusion",
-        closingtime: new Date("2024-03-11T22:30:00"),
-        discounttime: new Date("2024-03-11T21:00:00"),
+        closingtime: "22:30",
+        discounttime: "21:00",
         discount: 18,
         rating: 4.8,
         picture: "https://picsum.photos/200/300",
@@ -83,8 +83,8 @@ export default function RowSection({
         longitude: 103.842123,
         latitude: 1.362943,
         cuisine: "Mexican",
-        closingtime: new Date("2024-03-11T20:15:00"),
-        discounttime: new Date("2024-03-11T19:00:00"),
+        closingtime: "20:15",
+        discounttime: "19:00",
         discount: 14,
         rating: 4.4,
         picture: "https://picsum.photos/200/300",
@@ -96,8 +96,8 @@ export default function RowSection({
         longitude: 103.808765,
         latitude: 1.340219,
         cuisine: "Chinese",
-        closingtime: new Date("2024-03-11T21:45:00"),
-        discounttime: new Date("2024-03-11T20:30:00"),
+        closingtime: "21:45",
+        discounttime: "20:30",
         discount: 12,
         rating: 4.6,
         picture: "https://picsum.photos/200/300",
@@ -109,8 +109,8 @@ export default function RowSection({
         longitude: 103.85321,
         latitude: 1.375632,
         cuisine: "Greek",
-        closingtime: new Date("2024-03-11T19:30:00"),
-        discounttime: new Date("2024-03-11T18:15:00"),
+        closingtime: "19:30",
+        discounttime: "18:15",
         discount: 16,
         rating: 4.3,
         picture: "https://picsum.photos/200/300",
@@ -122,8 +122,8 @@ export default function RowSection({
         longitude: 103.825678,
         latitude: 1.351234,
         cuisine: "International",
-        closingtime: new Date("2024-03-11T22:15:00"),
-        discounttime: new Date("2024-03-11T20:45:00"),
+        closingtime: "22:15",
+        discounttime: "20:45",
         discount: 20,
         rating: 4.9,
         picture: "https://picsum.photos/200/300",
@@ -144,7 +144,7 @@ export default function RowSection({
           const data = await res.json();
           const body = data.body;
           console.log("Get Top Shops from Server:\n" + JSON.stringify(body, null, 2));
-          setRestaurants(sampleRestaurants);
+          setRestaurants(body);
         } catch (error) {
           console.error('Error fetching shops:', error);
         }
@@ -173,10 +173,11 @@ export default function RowSection({
                   {restaurant.discount}% off
                 </div>
                 <div className="">
-                  {restaurant.closingtime.toLocaleTimeString([], {
+                  {/* {restaurant.closingtime.toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
-                  })}
+                  })} */}
+                  Closing Time: {restaurant.closingtime}
                 </div>
               </div>
             </div>

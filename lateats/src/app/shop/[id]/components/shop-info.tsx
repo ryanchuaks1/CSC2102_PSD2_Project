@@ -4,9 +4,9 @@ export default function ShopInfo(
         discount,
         discounttime,
     }: {
-        closingtime: Date;
+        closingtime: string;
         discount: number;
-        discounttime: Date;
+        discounttime: string;
     }
 ) {
   return (
@@ -16,15 +16,17 @@ export default function ShopInfo(
       </div>
       <div className="text-center font-medium">
         Closes:{" "}
-        {closingtime
+        {/* {closingtime
           .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-          .toLocaleLowerCase()}
+          .toLocaleLowerCase()} */}
+        {closingtime}
       </div>
       <div className="text-center font-medium">
         {discount}% off starts at:{" "}
-        {discounttime
+        {/* {discounttime
           .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-          .toLocaleLowerCase()}
+          .toLocaleLowerCase()} */}
+        {discounttime}
       </div>
     </div>
   );
