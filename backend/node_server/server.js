@@ -57,7 +57,6 @@ app.post("/shops/account/create", cors(), async (req, res) => {
   const usersCollection = db.collection("users");
   let curr_shopId;
 
-  const session = client.startSession();
   try {
     //Insert Shop/Restaurant
     const insertResult = await shopsCollection.insertOne({

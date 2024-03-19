@@ -63,6 +63,9 @@ export default function Login() {
         });
         console.log("token set status:", res)
         // window.location.href = "/";
+
+        //redirect to home page
+        window.location.href = "/";
       } else {
         throw new Error("Login Failed");
       }
