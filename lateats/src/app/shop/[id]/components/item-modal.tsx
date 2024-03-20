@@ -1,17 +1,105 @@
 "use client";
 
 import { useState } from "react";
-
 export default function ItemModal() {
   const [formData, setFormData] = useState({
     itemName: "",
     basePrice: "",
-    imageLink: "",
+    imageFile: null,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "imageFile") {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFormData({ ...formData, [e.target.name]: reader.result });
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    // Resize the image to a fixed size
+  
+    try {
+      // Validate Fields
+      if (
+        formData.itemName == "" ||
+        formData.basePrice == "" ||
+        formData.imageFile == null
+      ) {
+        throw new Error("Please fill in all fields"); // Set error message
+      }
+  
+      resizeImage(formData.imageFile, 256, 256)
+        .then(async (resizedImage) => { // Make the arrow function async
+          const image_b64 = resizedImage.split(",")[1];
+  
+          const new_item = {
+            name: formData.itemName,
+            base_price: formData.basePrice,
+            image: image_b64,
+            shop_id: "1"
+          }
+  
+          // Send Form
+          const res = await fetch("http://localhost:5000/items/create", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              token: sessionStorage.getItem("token"),
+              item: new_item
+            })
+          });
+  
+          if (!res.ok) {
+            throw new Error("Failed to register");
+          }
+  
+          const data = await res.json();
+          console.log(data);
+          window.location.href = "/shop/1";
+  
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
+  
+    } catch (error) {
+      console.error("Error adding a new item: ", error);
+    }
+  }
+
+  
+  function resizeImage(image_src: string, width: number, height: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+  
+      img.onload = () => {
+        canvas.width = width;
+        canvas.height = height;
+        ctx?.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg"));
+      };
+  
+      img.onerror = (error) => {
+        reject(error);
+      };
+  
+      img.src = image_src;
+    });
+  }
 
   function toggleModal() {
     const modal = document.getElementById("item-modal");
@@ -19,7 +107,6 @@ export default function ItemModal() {
       modal.classList.toggle("hidden");
     }
   }
-
   return (
     <div
       id="item-modal"
@@ -44,13 +131,17 @@ export default function ItemModal() {
           onChange={handleChange}
         ></input>
         <input
-          name="imageLink"
-          placeholder="Image Link"
+          type="file"
+          name="imageFile"
+          placeholder="Image"
           className="border rounded-md p-2 m-2"
-          value={formData.imageLink}
           onChange={handleChange}
         ></input>
-        <button className="bg-primary text-white p-2 m-2 rounded-lg">
+        <button
+          type="submit"
+          className="bg-primary text-white p-2 m-2 rounded-lg"
+          onClick={handleSubmit}
+        >
           Submit
         </button>
         <button
