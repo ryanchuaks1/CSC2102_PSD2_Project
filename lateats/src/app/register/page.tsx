@@ -229,16 +229,17 @@ export default function Register() {
             Register
           </button>
 
-          <Snackbar
-            message={snackbarMessage}
-            visible={showSnackbar}
-          />
-
           <div className="text-center mt-4">
             <Link href="/login" className="text-primary underline">
               Already have a shop account? Login
             </Link>
           </div>
+
+          <Snackbar
+            message={snackbarMessage}
+            visible={showSnackbar}
+          />
+
         </div>
       </div>
     </div>

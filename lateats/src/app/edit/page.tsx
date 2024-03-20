@@ -1,27 +1,48 @@
 "use client";
 
-import Image from "next/image";
+import FrontendImage from "next/image";
 import Link from "next/link";
-import { isValidElement, useEffect, useState } from "react";
-import { createHash } from "crypto";
+import { useEffect, useState } from "react";
+import Snackbar from "./components/snackbar";
 
 export default function Edit() {
 
   const [formData, setFormData] = useState({
-    email: "",
     shopName: "",
     street: "",
     longitude: "",
     latitude: "",
     cuisine: "",
     closingTime: "",
+    discountTime: "",
+    discount: "",
     image: "",
   });
-  
+
+  //Snack bar variables
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  //Store the Current Shop ID
+  const [currShopId, setCurrShopId] = useState("");
+
+  //Onstart: Set the Variables of the form
   useEffect(() => {
+    //Check if user is logged in
+    if (sessionStorage.getItem("token") == null) {
+      window.location.href = "/login";
+    }
+    else
+    {
+      setLoading(false);
+    }
+
     async function setData() {
       try {
+        //Get the User
         const token = sessionStorage.getItem("token");
+
         const user = await fetch(`http://localhost:5000/users/token/${token}`, {
           mode: 'cors',
         });
@@ -31,9 +52,9 @@ export default function Edit() {
         }
 
         const userData = await user.json(); // Extract user data from response
-        console.log(JSON.stringify(userData, null, 2));
-
-        //get restaurant by user
+        //console.log("User: " + JSON.stringify(userData, null, 2));
+        
+        //Get restaurant by user
         const res = await fetch(`http://localhost:5000/users/shop/${userData.body._id}`, {
           mode: 'cors',
         });
@@ -42,21 +63,24 @@ export default function Edit() {
           throw new Error('Failed to fetch shop data');
         }
         
-        
         const data = await res.json();
         const body = data.body;
 
         setFormData({
           ...formData,
-          email: userData.body.email,
           shopName: body.name,
           street: body.street,
           longitude: body.longitude,
           latitude: body.latitude,
           cuisine: body.cuisine,
           closingTime: body.closingtime,
+          discountTime: body.discounttime,
+          discount: body.discount,
+          image: body.picture,
         });
-        
+
+        setCurrShopId(body._id); // Store the shop id
+
       } catch (error) {
         console.error('Error fetching shops:', error);
       }
@@ -66,6 +90,7 @@ export default function Edit() {
   }, []);
 
 
+  //On Input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //setFormData({ ...formData, [e.target.name]: e.target.value });
     if (e.target.name === "image") {
@@ -82,33 +107,98 @@ export default function Edit() {
     }
   };
 
+  //Wei Jun's Resize Function
+  function resizeImage(image_src: string, width: number, height: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image() as HTMLImageElement;
+  
+      img.onload = () => {
+        canvas.width = width;
+        canvas.height = height;
+        ctx?.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg"));
+      };
+  
+      img.onerror = (error) => {
+        reject(error);
+      };
+  
+      img.src = image_src;
+    });
+  }
+
+  //Show Error Message
+  const showMessage = (message: string) => {
+    setShowSnackbar(true);
+    setSnackbarMessage(message);
+    // Show Error for 5 seconds
+    setTimeout(() => {
+      setShowSnackbar(false);
+    }, 5000);
+  };
+  
   const handleSubmit = async () => {
     try {
       //Validate Fields
       if (
-        formData.email == "" ||
         formData.shopName == "" ||
         formData.longitude == "" ||
         formData.latitude == "" ||
         formData.cuisine == "" ||
-        formData.closingTime == ""
+        formData.closingTime == "" ||
+        formData.discountTime == "" ||
+        formData.discount == ""
       ) {
         throw new Error("Please fill in all fields"); // Set error message
       }
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email.trim())) {
-        throw new Error("Please enter a valid email address"); // Set error message
+      if (formData.image != null) {
+        formData.image = await resizeImage(formData.image, 256, 256);
       }
 
-      
-      // window.location.href = "/login";
-    } catch (error) {
-      console.error("Error creating account:", error);
+      //console.log("Sending Form\n" + JSON.stringify(formData, null, 2));
+      //console.log("Shop ID: " + currShopId);
 
+      //Send Form
+      const res = await fetch(`http://localhost:5000/shops/update`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+          {
+            _id: currShopId,
+            name: formData.shopName,
+            street: formData.street,
+            longitude: formData.longitude,
+            latitude: formData.latitude,
+            cuisine: formData.cuisine,
+            closingtime: formData.closingTime,
+            discounttime: formData.discountTime,
+            discount: formData.discount,
+            picture: formData.image,
+          }
+        ),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update shop: " + res.statusText);
+      }else{
+        showMessage("Form Send Successfully");
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error creating account:", (error as Error).message);
+      showMessage((error as Error).message);
     }
   };
 
+  if (loading) {
+    return null;
+  }
   return (
     <div className="bg-white lg:flex lg:justify-center lg:pt-5 w-full min-h-screen items-center">
       <div className="flex flex-col lg:flex-row px-6 py-12 bg-white items-center">
@@ -120,7 +210,7 @@ export default function Edit() {
             Discounted supper near 🫵
           </div>
 
-          <Image
+          <FrontendImage
             src="/supper.svg"
             width={500}
             height={500}
@@ -136,14 +226,6 @@ export default function Edit() {
           <div className="text-slate-950 text-lg text-center p-2">
             We can beat waste together
           </div>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="border-b-2 border-primary p-2 m-2 my-8"
-          ></input>
 
           <input
             type="text"
@@ -208,6 +290,32 @@ export default function Edit() {
             ></input>
           </div>
 
+          <div className="flex flex-row items-center p-2 lg:p-0">
+            <div className="text-primary text-lg p-1 pl-3 lg:pl-4 mb-4">
+              Discount Time:
+            </div>
+            <input
+              type="Time"
+              name="discountTime"
+              placeholder="Discount Time"
+              value={formData.discountTime}
+              onChange={handleChange}
+              className="border-b-2 border-primary p-2 m-2 mb-8"
+            ></input>
+          </div>
+
+          <input
+            type="number"
+            name="discount"
+            placeholder="Percentage Discount(%)"
+            value={formData.discount}
+            onChange={handleChange}
+            className="border-b-2 border-primary p-2 m-2 mb-8"
+          ></input>
+
+          <div className="text-primary text-lg p-1 pl-3 lg:pl-4 ">
+            Shop Profile Picture (Optional):
+          </div>
           <input
             type="file"
             name="image"
@@ -229,6 +337,11 @@ export default function Edit() {
             </Link>
           </div>
         </div>
+
+        <Snackbar
+            message={snackbarMessage}
+            visible={showSnackbar}
+          />
       </div>
     </div>
   );

@@ -102,14 +102,33 @@ app.post("/shops/account/create", cors(), async (req, res) => {
 });
 
 // Update an existing shop
-app.put("/shops/update", cors(), async (req, res) => {
+app.post("/shops/update", cors(), async (req, res) => {
   const shopData = req.body;
   const shopsCollection = db.collection("shops");
+  console.log(JSON.stringify(shopData, null, 2));
 
   try {
+    const checkShop = await shopsCollection.findOne({ _id: ObjectId(shopData._id) });
+
+    if (!checkShop) {
+      res.status(404).json({ result: false, message: "Shop really not found" });
+      return;
+    }
+
     const updateResult = await shopsCollection.updateOne(
-      { _id: ObjectId(shopData.id) },
-      { $set: { shopName: shopData.shopName, location: shopData.location } }
+      { _id: ObjectId(shopData._id) },
+      { $set: { 
+        name: shopData.name,
+        street: shopData.street,
+        longitude: shopData.longitude,
+        latitude: shopData.latitude,
+        cuisine: shopData.cuisine,
+        discounttime: shopData.discounttime,
+        closingtime: shopData.closingtime,
+        discount: shopData.discount,
+        rating: shopData.rating,
+        picture: shopData.picture,
+       } }
     );
 
     res
