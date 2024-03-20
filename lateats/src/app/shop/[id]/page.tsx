@@ -37,7 +37,7 @@ export default function Shop({ params }: { params: { id: string } }) {
           <div className="m-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {foodItems.map((item) => (
               <ItemGrid
-                key={item.id}
+                key={item._id}
                 item={item}
                 discount={restaurant.discount}
               />
