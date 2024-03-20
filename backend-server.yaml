@@ -1,0 +1,51 @@
+# Backend Server Service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-server-service
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    targetPort: 5000
+    NodePort: 5000
+  selector:
+    app: backend-server
+
+---
+
+# Backend Server Deployment
+
+# version of object API, see "kubectl api-versions"
+apiVersion: apps/v1
+
+# type of object (Deployment)
+kind: Deployment
+
+# Dictionary of information about the object
+metadata:
+  name: backend-server-deployment
+
+# Additional information about the object
+spec:
+  # desired no. of pods at all times
+  replicas: 3
+
+  # labels and selectors (e.g., env: dev)
+  selector:
+    # this associates the pod and the deployment
+    matchLabels:
+      app: backend-server
+  template:
+    metadata:
+      labels:
+        app: backend-server
+    spec:
+      containers:
+      - name: backend-server-deployment
+        image: ghcr.io/leungwj/lateats-backend-server:latest
+        ports:
+        - containerPort: 5000
+
+
