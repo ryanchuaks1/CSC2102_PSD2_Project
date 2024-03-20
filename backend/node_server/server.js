@@ -180,6 +180,7 @@ app.get("/shops/index", cors(), async (req, res) => {
   }
 });
 
+//Get shops nearby
 app.get("/shops/nearby", cors(), async (req, res) => {
   const { longitude, latitude } = req.query;
   const shopsCollection = db.collection("shops");
@@ -204,6 +205,7 @@ app.get("/shops/nearby", cors(), async (req, res) => {
   }
 });
 
+//Get the top 50 shops and pick 10 random shops
 app.get("/shops/top", cors(), async (req, res) => {
   const shopsCollection = db.collection("shops");
 
@@ -224,6 +226,8 @@ app.get("/shops/top", cors(), async (req, res) => {
     res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
+
+
 //----------------------------------------------------------------------------------
 // ----------------------------- Shop CRUD Operations ------------------------------
 //----------------------------------------------------------------------------------
@@ -284,6 +288,33 @@ app.get("/users/token/:token", cors(), async (req, res) => {
     } else {
       res.status(404).json({ result: false, message: "User not found" });
     }
+  } catch (error) {
+    console.error("Error getting user:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
+  }
+});
+
+// Get shop by user id
+app.get("/users/shop/:user_id", cors(), async (req, res) => {
+  const userId = req.params.user_id;
+  const usersCollection = db.collection("users");
+  const shopsCollection = db.collection("shops");
+
+  try {
+    const user = await usersCollection.findOne({ _id: ObjectId(userId) });
+    if (!user) {
+      res.status(404).json({ result: false, message: "User not found" });
+      return res
+    } 
+
+    const shop = await shopsCollection.findOne({ _id: user.shop_id });
+
+    if (shop) {
+      res.status(200).json({ body: shop });
+    } else { 
+      res.status(404).json({ result: false, message: "Shop not found" });
+    }
+    
   } catch (error) {
     console.error("Error getting user:", error);
     res.status(500).json({ result: false, message: "Internal server error" });

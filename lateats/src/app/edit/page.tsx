@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { isValidElement, useState } from "react";
+import { isValidElement, useEffect, useState } from "react";
 import { createHash } from "crypto";
-import Snackbar from "./components/snackbar";
 
-export default function Register() {
+export default function Edit() {
+
   const [formData, setFormData] = useState({
     email: "",
     shopName: "",
@@ -15,26 +15,71 @@ export default function Register() {
     latitude: "",
     cuisine: "",
     closingTime: "",
-    password: "",
-    confirmPassword: "",
+    image: "",
   });
+  
+  useEffect(() => {
+    async function setData() {
+      try {
+        const token = sessionStorage.getItem("token");
+        const user = await fetch(`http://localhost:5000/users/token/${token}`, {
+          mode: 'cors',
+        });
 
-  //Snack bar variables
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+        if (!user.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const userData = await user.json(); // Extract user data from response
+        console.log(JSON.stringify(userData, null, 2));
+
+        //get restaurant by user
+        const res = await fetch(`http://localhost:5000/users/shop/${userData.body._id}`, {
+          mode: 'cors',
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch shop data');
+        }
+        
+        
+        const data = await res.json();
+        const body = data.body;
+
+        setFormData({
+          ...formData,
+          email: userData.body.email,
+          shopName: body.name,
+          street: body.street,
+          longitude: body.longitude,
+          latitude: body.latitude,
+          cuisine: body.cuisine,
+          closingTime: body.closingtime,
+        });
+        
+      } catch (error) {
+        console.error('Error fetching shops:', error);
+      }
+    }
+
+    setData();
+  }, []);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  //Show Error Message
-  const showErrorMessage = (message: string) => {
-    setShowSnackbar(true);
-    setSnackbarMessage(message);
-    // Show Error for 5 seconds
-    setTimeout(() => {
-      setShowSnackbar(false);
-    }, 5000);
+    //setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "image") {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFormData({ ...formData, [e.target.name]: reader.result });
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSubmit = async () => {
@@ -46,9 +91,7 @@ export default function Register() {
         formData.longitude == "" ||
         formData.latitude == "" ||
         formData.cuisine == "" ||
-        formData.closingTime == "" ||
-        formData.password == "" ||
-        formData.confirmPassword == ""
+        formData.closingTime == ""
       ) {
         throw new Error("Please fill in all fields"); // Set error message
       }
@@ -58,50 +101,11 @@ export default function Register() {
         throw new Error("Please enter a valid email address"); // Set error message
       }
 
-      //Validate Password
-      if (formData.password !== formData.confirmPassword) {
-        throw new Error("Passwords do not match");
-      }
-
-      console.log("Sending Form\n" + JSON.stringify(formData, null, 2));
-      const hashedPassword = createHash("sha256").update(formData.password).digest("hex");
-      //Send Form
-      const res = await fetch("http://localhost:5000/shops/account/create", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          shop: {
-            name: formData.shopName,
-            street: formData.street,
-            longitude: formData.longitude,
-            latitude: formData.latitude,
-            cuisine: formData.cuisine,
-            closingtime: formData.closingTime,
-            discounttime: "2024-03-21T20:00:00Z",
-            discount: 0,
-            rating: 0,
-            picture: "https://picsum.photos/200/300",
-          },
-          user: {
-            email: formData.email,
-            password: hashedPassword,
-          },
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to register");
-      }
-
-      const data = await res.json();
-      console.log(data);
-      window.location.href = "/login";
+      
+      // window.location.href = "/login";
     } catch (error) {
       console.error("Error creating account:", error);
-      showErrorMessage((error as Error).message);
+
     }
   };
 
@@ -205,19 +209,9 @@ export default function Register() {
           </div>
 
           <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="border-b-2 border-primary p-2 m-2 mb-8"
-          ></input>
-
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
+            type="file"
+            name="image"
+            accept="image/*"
             onChange={handleChange}
             className="border-b-2 border-primary p-2 m-2 mb-8"
           ></input>
@@ -228,11 +222,6 @@ export default function Register() {
           >
             Register
           </button>
-
-          <Snackbar
-            message={snackbarMessage}
-            visible={showSnackbar}
-          />
 
           <div className="text-center mt-4">
             <Link href="/login" className="text-primary underline">
