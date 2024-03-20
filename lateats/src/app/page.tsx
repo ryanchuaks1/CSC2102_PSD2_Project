@@ -30,7 +30,7 @@ export default function Home() {
           <RowSection header="Highest Rated" />
         </div>
         <div className="lg:flex-grow lg:block lg:-mt-7">
-          <Map restaurants={sampleRestaurants} />
+          <Map />
         </div>
       </div>
       <div className="sticky bottom-0 w-full lg:hidden">

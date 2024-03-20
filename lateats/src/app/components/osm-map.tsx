@@ -7,12 +7,17 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { error } from "console";
 
-export default function Map({ restaurants }: { restaurants: Restaurant[] }) {
+export default function Map() {
   
-  //const [currPosition, setCurrPosition] = useState<[number, number] >([]);
+  //Store Position
   const [currPosition, setCurrPosition] = useState<[number, number] | null>(null);
+
+  //Store Statuses
   const [loading, setLoading] = useState(true);
   const [deniedPermission, setDeniedPermission] = useState(false);
+
+  //Store Restaurants
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   async function fetchNearbyData(longitude: number, latitude: number) {
     try {
@@ -33,6 +38,7 @@ export default function Map({ restaurants }: { restaurants: Restaurant[] }) {
       const data = await res.json();
       const body = data.body;
       console.log("Nearby Restaurants:\n" + JSON.stringify(body, null, 2));
+      setRestaurants(body);
 
     } catch (error) {
       console.error('Error fetching shops:', error);
