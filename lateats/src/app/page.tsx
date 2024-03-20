@@ -24,7 +24,7 @@ export default function Home() {
         <SearchBar />
       </div>
       <div className="lg:flex">
-        <div className="lg:max-w-96 lg:overflow-y-scroll lg:h-[88vh] -mt-7 pt-7">
+        <div className="lg:w-96 lg:overflow-y-scroll lg:h-[88vh] -mt-7 pt-7">
           <ListSection header="Near you"/>
           <ListSection header="Popular"/>
           <RowSection header="Highest Rated" />

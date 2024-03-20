@@ -48,8 +48,11 @@ const closeDB = () => {
 app.get("/", (request, response) => {
   response.send("Hello, World!");
 });
+//----------------------------------------------------------------------------------
+// ----------------------------- Shop CRUD Operations ------------------------------
+//----------------------------------------------------------------------------------
 
-// Add a new shop
+// Add a new shop and create a new user
 app.options("/shops/account/create", cors());
 app.post("/shops/account/create", cors(), async (req, res) => {
   const data = req.body;
@@ -148,10 +151,12 @@ app.get("/shops/view/:shop_id", cors(), async (req, res) => {
     const items = await itemsCollection.find({ shop_id: shopId }).toArray();
 
     if (shop && items) {
-      res.status(200).json({ body: {
-        shop: shop,
-        items: items
-      } });
+      res.status(200).json({
+        body: {
+          shop: shop,
+          items: items,
+        },
+      });
     } else {
       res.status(404).json({ result: false, message: "Shop not found" });
     }
@@ -219,6 +224,13 @@ app.get("/shops/top", cors(), async (req, res) => {
     res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
+//----------------------------------------------------------------------------------
+// ----------------------------- Shop CRUD Operations ------------------------------
+//----------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------
+// ----------------------------- User CRUD Operations ------------------------------
+//----------------------------------------------------------------------------------
 
 // Get a specific user
 app.post("/users/login/", cors(), async (req, res) => {
@@ -277,11 +289,17 @@ app.get("/users/token/:token", cors(), async (req, res) => {
     res.status(500).json({ result: false, message: "Internal server error" });
   }
 });
+//----------------------------------------------------------------------------------
+// ----------------------------- User CRUD Operations ------------------------------
+//----------------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------------
+// ----------------------------- Item CRUD Operations ------------------------------
+//----------------------------------------------------------------------------------
 app.post("/items/create", cors(), async (req, res) => {
   const { shop_id, token, item_name, base_price, image_b64 } = req.body;
   const usersCollection = db.collection("users");
-  
+
   const itemsCollection = db.collection("items");
 
   let item_id;
@@ -312,7 +330,7 @@ app.post("/items/create", cors(), async (req, res) => {
   }
 });
 
-app.delete("/items/delete", cors(), async(req, res) => {
+app.delete("/items/delete", cors(), async (req, res) => {
   const itemData = req.body;
   const itemsCollection = db.collection("items");
 
@@ -328,7 +346,10 @@ app.delete("/items/delete", cors(), async(req, res) => {
     console.error("Error deleting shop:", error);
     res.status(500).json({ result: false, message: "Internal server error" });
   }
-})
+});
+//----------------------------------------------------------------------------------
+// ----------------------------- Item CRUD Operations ------------------------------
+//----------------------------------------------------------------------------------
 
 // Connect to MongoDB and start the server
 connectDB().then(() => {

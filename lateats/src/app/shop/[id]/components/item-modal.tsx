@@ -59,7 +59,6 @@ export default function ItemModal() {
         >
           Cancel
         </button>
-        <input></input>
       </div>
     </div>
   );
