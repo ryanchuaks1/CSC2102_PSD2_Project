@@ -10,6 +10,7 @@ import ShopHeader from "./components/shop-header";
 export default function Shop({ params }: { params: { id: string } }) {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     // Find the restaurant with the matching id
@@ -18,7 +19,7 @@ export default function Shop({ params }: { params: { id: string } }) {
         mode: "cors",
       });
       if (!res.ok) {
-        throw new Error('Failed to fetch data');
+        throw new Error("Failed to fetch data");
       }
       const data = await res.json();
       console.log(data.body);
@@ -33,7 +34,11 @@ export default function Shop({ params }: { params: { id: string } }) {
       {restaurant ? (
         <div className="min-h-screen bg-white">
           <ShopHeader restaurant={restaurant} />
-          <ShopInfo restaurant={restaurant}/>
+          <ShopInfo
+            restaurant={restaurant}
+            setIsEditing={setIsEditing}
+            isEditing={isEditing}
+          />
           <div className="m-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {foodItems.map((item) => (
               <ItemGrid
@@ -43,7 +48,7 @@ export default function Shop({ params }: { params: { id: string } }) {
               />
             ))}
           </div>
-          <div className="w-screen h-auto sticky bottom-0 p-4 flex justify-center lg:hidden">
+          <div className="sticky bottom-0 w-screen p-4 flex justify-center lg:hidden">
             <Link
               href="/"
               className="p-4 text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md w-full text-center"
