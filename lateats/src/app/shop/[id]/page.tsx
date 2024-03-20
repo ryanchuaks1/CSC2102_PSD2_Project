@@ -31,7 +31,7 @@ export default function Shop({ params }: { params: { id: string } }) {
       {restaurant ? (
         <div className="min-h-screen bg-white">
           <ShopHeader restaurant={restaurant} />
-          <ShopInfo restaurant={restaurant} />
+          <ShopInfo restaurant={restaurant}/>
           <div className="m-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {foodItems.map((item) => (
               <ItemGrid
