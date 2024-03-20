@@ -7,17 +7,17 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { error } from "console";
 
-export default function Map() {
-  
-  //Store Position
-  const [currPosition, setCurrPosition] = useState<[number, number] | null>(null);
-
-  //Store Statuses
-  const [loading, setLoading] = useState(true);
-  const [deniedPermission, setDeniedPermission] = useState(false);
+export default function Map(
+  { currPosition, 
+    isParentLoading,
+   } : { currPosition: [number, number] | null, isParentLoading: boolean}
+) {
 
   //Store Restaurants
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+
+  const [loading, setLoading] = useState(true);
+  const [deniedPermission, setDeniedPermission] = useState(false);
 
   async function fetchNearbyData(longitude: number, latitude: number) {
     try {
@@ -46,26 +46,15 @@ export default function Map() {
   }
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setCurrPosition([position.coords.latitude, position.coords.longitude]);
-        console.log(currPosition);
-        fetchNearbyData(position.coords.longitude, position.coords.latitude);
-        setLoading(false);
-      },
-      error => {
-        console.error(error);
-        setLoading(false);
-        setDeniedPermission(true);
-
-      });
-    }
-    else
-    {
-      console.error("Geolocation is not supported by this browser.");
+    if (!isParentLoading && currPosition != null) {
+      fetchNearbyData(currPosition[1], currPosition[0]); // [latitude, longitude]
       setLoading(false);
     }
-  }, []);
+    else if (!isParentLoading && currPosition == null) {
+      setDeniedPermission(true);
+      setLoading(false);
+    }
+  }, [currPosition]);
 
   const openMap = () => {
     const map = document.getElementById("map");

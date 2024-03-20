@@ -14,28 +14,47 @@ export default function ListSection({
   const [numberOfItemstoShow, setNumberOfItemstoShow] = useState(3);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('http://localhost:5000/shops/index', {
-          mode: 'cors',
-        });
-      
-        if (!res.ok) {
-          throw new Error('Failed to fetch data');
-        }
-      
-        const data = await res.json();
-        const body = data.body;
-        //console.log("Get All Shops from Server:\n" + JSON.stringify(body, null, 2));
-        setRestaurants(body);
-      } catch (error) {
-        console.error('Error fetching shops:', error);
-      }
-    }
-
-    fetchData();
+    fetchAllShops();
     //setRestaurants(sampleRestaurants);
   }, []);
+
+  async function fetchAllShops() {
+    try {
+      const res = await fetch('http://localhost:5000/shops/index', {
+        mode: 'cors',
+      });
+    
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+    
+      const data = await res.json();
+      const body = data.body;
+      //console.log("Get All Shops from Server:\n" + JSON.stringify(body, null, 2));
+      setRestaurants(body);
+    } catch (error) {
+      console.error('Error fetching shops:', error);
+    }
+  }
+
+  async function fetchNearbyShops() {
+    try {
+      const res = await fetch('http://localhost:5000/shops/nearby', {
+        mode: 'cors',
+      });
+    
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+    
+      const data = await res.json();
+      const body = data.body;
+      //console.log("Get Nearby Shops from Server:\n" + JSON.stringify(body, null, 2));
+      setRestaurants(body);
+    } catch (error) {
+      console.error('Error fetching nearby shops:', error);
+    }
+  }
 
   const showMoreRestaurants = () => {
     // Increment the visible restaurants count by 3
