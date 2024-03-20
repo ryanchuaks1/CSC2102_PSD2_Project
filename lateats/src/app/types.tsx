@@ -13,9 +13,9 @@ type Restaurant = {
 };
 
 type FoodItem = {
-  id: number;
+  _id: number;
   name: string;
-  price: number;
+  base_price: number;
   image: string;
 };
 

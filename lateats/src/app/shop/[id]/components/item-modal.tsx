@@ -65,7 +65,7 @@ export default function ItemModal() {
   
           const data = await res.json();
           console.log(data);
-          window.location.reload();
+          // window.location.reload();
         })
         .catch((error) => {
           throw new Error(error);
