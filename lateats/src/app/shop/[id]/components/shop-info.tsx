@@ -12,7 +12,7 @@ export default function ShopInfo({ restaurant }: { restaurant: Restaurant }) {
     <div className="lg:flex lg:p-6 lg:justify-between">
       <ItemModal />
       <div className="hidden lg:block bg-primary p-4 rounded-md shadow-md">
-        <div className="font-bold text-3xl text-white font-serif">
+        <div className="font-bold text-3xl text-white font-serif min-w-64">
           {restaurant.name}
         </div>
         <div className="font-light text-lg text-white mb-1">
@@ -36,7 +36,7 @@ export default function ShopInfo({ restaurant }: { restaurant: Restaurant }) {
         </div>
       </div>
 
-      <div className="self-center text-center mt-2">
+      <div className="self-center text-center mt-2 min-w-64">
         <button className="px-4 py-2 text-2xl h-fit font-semibold bg-yellow-300 hover:bg-yellow-400 text-white rounded-lg drop-shadow-md mr-2">
           Edit
         </button>
