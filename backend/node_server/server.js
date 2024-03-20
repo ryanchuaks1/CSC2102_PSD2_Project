@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { MongoClient, ObjectId } = require("mongodb");
 const cors = require("cors");
+const { parse } = require("path");
 
 const Mongo = {
   host: "mongodb",
@@ -65,8 +66,8 @@ app.post("/shops/account/create", cors(), async (req, res) => {
     const insertResult = await shopsCollection.insertOne({
       name: data.shop.name,
       street: data.shop.street,
-      longitude: data.shop.longitude,
-      latitude: data.shop.latitude,
+      longitude: parseFloat(data.shop.longitude),
+      latitude: parseFloat(data.shop.latitude),
       cuisine: data.shop.cuisine,
       discounttime: data.shop.discounttime,
       closingtime: data.shop.closingtime,
@@ -120,8 +121,8 @@ app.post("/shops/update", cors(), async (req, res) => {
       { $set: { 
         name: shopData.name,
         street: shopData.street,
-        longitude: shopData.longitude,
-        latitude: shopData.latitude,
+        longitude: parseFloat(shopData.longitude),
+        latitude: parseFloat(shopData.latitude),
         cuisine: shopData.cuisine,
         discounttime: shopData.discounttime,
         closingtime: shopData.closingtime,
@@ -141,7 +142,7 @@ app.post("/shops/update", cors(), async (req, res) => {
 });
 
 // Delete a shop
-app.delete("/shops/delete", cors(), async (req, res) => {
+app.post("/shops/delete", cors(), async (req, res) => {
   const shopData = req.body;
   const shopsCollection = db.collection("shops");
 
@@ -201,8 +202,8 @@ app.get("/shops/index", cors(), async (req, res) => {
 });
 
 //Get shops nearby
-app.get("/shops/nearby", cors(), async (req, res) => {
-  const { longitude, latitude } = req.query;
+app.post("/shops/nearby", cors(), async (req, res) => {
+  const { longitude, latitude } = req.body;
   const shopsCollection = db.collection("shops");
 
   try {
@@ -210,7 +211,7 @@ app.get("/shops/nearby", cors(), async (req, res) => {
     const lat = parseFloat(latitude);
 
     //Getting the nearby shops query
-    const range = 0.1;
+    const range = 1.0;
     const query = {
       longitude: { $gte: long - range, $lte: long + range },
       latitude: { $gte: lat - range, $lte: lat + range },

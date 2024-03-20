@@ -143,7 +143,7 @@ export default function RowSection({
         
           const data = await res.json();
           const body = data.body;
-          console.log("Get Top Shops from Server:\n" + JSON.stringify(body, null, 2));
+          //console.log("Get Top Shops from Server:\n" + JSON.stringify(body, null, 2));
           setRestaurants(body);
         } catch (error) {
           console.error('Error fetching shops:', error);
