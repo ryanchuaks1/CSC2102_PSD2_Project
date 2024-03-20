@@ -25,10 +25,8 @@ export default function ItemModal() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Resize the image to a fixed size
   
     try {
-      // Validate Fields
       if (
         formData.itemName == "" ||
         formData.basePrice == "" ||
@@ -39,13 +37,13 @@ export default function ItemModal() {
   
       resizeImage(formData.imageFile, 256, 256)
         .then(async (resizedImage) => { // Make the arrow function async
+          console.log(resizedImage);
           const image_b64 = resizedImage.split(",")[1];
   
           const new_item = {
             name: formData.itemName,
             base_price: formData.basePrice,
             image: image_b64,
-            shop_id: "1"
           }
   
           // Send Form
@@ -62,13 +60,12 @@ export default function ItemModal() {
           });
   
           if (!res.ok) {
-            throw new Error("Failed to register");
+            throw new Error("Failed to add new item");
           }
   
           const data = await res.json();
           console.log(data);
-          window.location.href = "/shop/1";
-  
+          window.location.reload();
         })
         .catch((error) => {
           throw new Error(error);
