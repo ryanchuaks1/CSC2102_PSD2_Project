@@ -147,6 +147,7 @@ app.get("/shops/view/:shop_id", cors(), async (req, res) => {
   const itemsCollection = db.collection("items");
 
   try {
+    console.log("from server.js: shopId: ", shopId, "ObjectId(shopId): ", ObjectId(shopId));
     const shop = await shopsCollection.findOne({ _id: ObjectId(shopId) });
     const items = await itemsCollection.find({ shop_id: shopId }).toArray();
 
@@ -328,9 +329,8 @@ app.get("/users/shop/:user_id", cors(), async (req, res) => {
 // ----------------------------- Item CRUD Operations ------------------------------
 //----------------------------------------------------------------------------------
 app.post("/items/create", cors(), async (req, res) => {
-  const { shop_id, token, item_name, base_price, image_b64 } = req.body;
+  const { token, item } = req.body;
   const usersCollection = db.collection("users");
-
   const itemsCollection = db.collection("items");
 
   let item_id;
@@ -341,11 +341,11 @@ app.post("/items/create", cors(), async (req, res) => {
       res.status(404).json({ result: false, message: "Invalid token" });
     }
 
-    item_id = await usersCollection.insertOne({
-      name: item_name,
-      base_price: base_price,
-      image: image_b64,
-      shop_id: shop_id,
+    item_id = await itemsCollection.insertOne({
+      name: item.name,
+      base_price: item.base_price,
+      image: item.image,
+      shop_id: user.shop_id
     });
 
     res
