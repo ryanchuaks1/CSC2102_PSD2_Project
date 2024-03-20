@@ -221,10 +221,10 @@ export default function Edit() {
 
         <div className="w-full lg:w-2/3 flex flex-col">
           <div className="text-primary text-3xl font-bold font-serif text-center">
-            Join us now
+            Update Your Shop Details
           </div>
           <div className="text-slate-950 text-lg text-center p-2">
-            We can beat waste together
+            Providing more information about your shop promote it better
           </div>
 
           <input
@@ -328,14 +328,8 @@ export default function Edit() {
             className="bg-primary text-white p-2 m-2 rounded-lg"
             onClick={handleSubmit}
           >
-            Register
+            Update Shop Details
           </button>
-
-          <div className="text-center mt-4">
-            <Link href="/login" className="text-primary underline">
-              Already have a shop account? Login
-            </Link>
-          </div>
         </div>
 
         <Snackbar
