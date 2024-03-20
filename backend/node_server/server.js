@@ -192,7 +192,7 @@ app.get("/shops/index", cors(), async (req, res) => {
   const shopsCollection = db.collection("shops");
 
   try {
-    const allShops = await shopsCollection.find().toArray();
+    const allShops = await shopsCollection.aggregate([{ $sample: { size: 9999999 }}]).toArray();
 
     res.status(200).json({ body: allShops });
   } catch (error) {
@@ -244,6 +244,27 @@ app.get("/shops/top", cors(), async (req, res) => {
     res.status(200).json({ body: topRandomShops });
   } catch (error) {
     console.error("Error getting top shops:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
+  }
+});
+
+//Search for a Shop
+app.get("/shops/search", cors(), async (req, res) => {
+  const shopsCollection = db.collection("shops");
+  const query = req.query.q; 
+
+  try {
+    const searchResult = await shopsCollection.find({
+      // Use $regex to perform a case-insensitive search on text fields
+      $or: [
+        { name: { $regex: query, $options: "i" } }, // Search in the name field
+        { cuisine: { $regex: query, $options: "i" } }, // Search in the cuisine field
+      ],
+    }).toArray();
+
+    res.status(200).json({ body: searchResult });
+  } catch (error) {
+    console.error("Error searching shops:", error);
     res.status(500).json({ result: false, message: "Internal server error" });
   }
 });

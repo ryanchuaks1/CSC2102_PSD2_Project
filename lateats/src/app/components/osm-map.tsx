@@ -1,24 +1,26 @@
 "use client";
 
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { LatLngTuple } from "leaflet";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { error } from "console";
+import { captureRejectionSymbol } from "events";
 
-export default function Map() {
-  
-  //Store Position
-  const [currPosition, setCurrPosition] = useState<[number, number] | null>(null);
-
-  //Store Statuses
-  const [loading, setLoading] = useState(true);
-  const [deniedPermission, setDeniedPermission] = useState(false);
+export default function Map(
+  { currPosition, 
+    isParentLoading,
+   } : { currPosition: [number, number] | null, isParentLoading: boolean}
+) {
 
   //Store Restaurants
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
+  const [loading, setLoading] = useState(true);
+  const [deniedPermission, setDeniedPermission] = useState(false);
+
+  //IF current Location is not null get the nearby data
   async function fetchNearbyData(longitude: number, latitude: number) {
     try {
       console.log("My location: " + longitude + ", " + latitude);
@@ -45,27 +47,45 @@ export default function Map() {
     }
   }
 
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setCurrPosition([position.coords.latitude, position.coords.longitude]);
-        console.log(currPosition);
-        fetchNearbyData(position.coords.longitude, position.coords.latitude);
-        setLoading(false);
-      },
-      error => {
-        console.error(error);
-        setLoading(false);
-        setDeniedPermission(true);
-
+  //ELSE: Get all Shops
+  async function fetchAllShops() {
+    try {
+      const res = await fetch('http://localhost:5000/shops/index', {
+        mode: 'cors',
       });
+    
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+    
+      const data = await res.json();
+      const body = data.body;
+      //console.log("Get All Shops from Server:\n" + JSON.stringify(body, null, 2));
+      setRestaurants(body);
+    } catch (error) {
+      console.error('Error fetching shops:', error);
     }
-    else
-    {
-      console.error("Geolocation is not supported by this browser.");
+  }
+  //ENDIF - If statement in use effect
+
+  useEffect(() => {
+    //Update Statueses
+    if (!isParentLoading && currPosition != null) {
+      console.log("Fetching Nearby Data");
       setLoading(false);
     }
-  }, []);
+    else if (!isParentLoading && currPosition == null) {
+      setDeniedPermission(true);
+      setLoading(false);
+    }
+
+    //Fetch Nearby Data
+    if (currPosition) {
+      fetchNearbyData(currPosition[1], currPosition[0]); // [latitude, longitude]
+    } else {
+      fetchAllShops(); // Default coordinates
+    }
+  }, [isParentLoading]);
 
   const openMap = () => {
     const map = document.getElementById("map");
@@ -82,6 +102,13 @@ export default function Map() {
     popupAnchor: [0, -32], // Adjust the anchor point of the popup
   });
   //const position: LatLngTuple = [1.35, 103.82];
+
+  const userIcon = new L.Icon({
+    iconUrl: "/user-pin.svg",
+    iconSize: [32, 32], // Adjust the size of the icon as needed
+    iconAnchor: [16, 32], // Adjust the anchor point of the icon
+    popupAnchor: [0, -32], // Adjust the anchor point of the popup
+  });
 
   if(loading) {
     return (
@@ -108,6 +135,16 @@ export default function Map() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+          {currPosition && (
+            <Marker
+              position={currPosition}
+              icon={userIcon}
+            >
+              <Popup>
+                You Are Here
+              </Popup>
+            </Marker>
+          )}
           {restaurants &&
             restaurants.length > 0 &&
             restaurants.map((restaurant) => (
@@ -115,7 +152,13 @@ export default function Map() {
                 key={restaurant._id}
                 position={[restaurant.latitude, restaurant.longitude]}
                 icon={customIcon}
-              ></Marker>
+              >
+                <Popup>
+                  <a href={`/shop/${restaurant._id}`}>
+                    <div className="text-lg font-semibold">{restaurant.name}</div>
+                  </a>
+                </Popup>
+              </Marker>
             ))}
         </MapContainer>
         <div className="bg-white px-4 shadow-inner shaodw-lg h-[12vh] flex justify-center p-4 lg:hidden">

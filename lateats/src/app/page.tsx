@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+'use client';
+
+import { useEffect, useMemo, useState } from "react";
 import ListSection from "./components/list-section";
 import MobileFooter from "./components/mobile-footer";
 import MobileHeader from "./components/mobile-header";
@@ -8,9 +10,38 @@ import WebHeader from "./components/web-header";
 import dynamic from 'next/dynamic';
 
 export default function Home() {
-  const Map = dynamic(() => import('./components/osm-map'), {
+  
+  //Store Position
+  const [currPosition, setCurrPosition] = useState<[number, number] | null>(null);
+  //Store Statuses
+  const [loading, setLoading] = useState(true);
+  const [deniedPermission, setDeniedPermission] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const Map = useMemo(() => dynamic(() => import('./components/osm-map'), {
     ssr: false,
-  });
+  }), []);
+  
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setCurrPosition([position.coords.latitude, position.coords.longitude]);
+        console.log(currPosition);
+        setLoading(false);
+      },
+      error => {
+        console.error(error);
+        setLoading(false);
+        setDeniedPermission(true);
+      });
+    }
+    else
+    {
+      console.error("Geolocation is not supported by this browser.");
+      setLoading(false);
+    }
+  }, []);
+
 
   return (
     <div className="bg-white min-h-screen">
@@ -21,16 +52,24 @@ export default function Home() {
         <MobileHeader />
       </div>
       <div className="mx-8 -mt-5 lg:max-w-80">
-        <SearchBar />
+        <SearchBar setSearch={setSearchQuery}/>
       </div>
       <div className="lg:flex">
-        <div className="lg:w-96 lg:overflow-y-scroll lg:h-[88vh] -mt-7 pt-7">
-          <ListSection header="Near you"/>
-          <ListSection header="Popular"/>
-          <RowSection header="Highest Rated" />
-        </div>
+          {
+            searchQuery !=  "" ? (
+              <div className="lg:w-96 lg:overflow-y-scroll lg:h-[88vh] -mt-7 pt-7">
+                <ListSection header="Search Results" searchQuery={searchQuery}/>
+              </div>
+            ) : (
+              <div className="lg:w-96 lg:overflow-y-scroll lg:h-[88vh] -mt-7 pt-7">
+                <ListSection header="Near you" currPosition={currPosition}/>
+                <ListSection header="Other Recommendations"/>
+                <RowSection header="Highest Rated" />
+              </div>
+            )
+          }
         <div className="lg:flex-grow lg:block lg:-mt-7">
-          <Map />
+          <Map currPosition={currPosition} isParentLoading={loading} />
         </div>
       </div>
       <div className="sticky bottom-0 w-full lg:hidden">
