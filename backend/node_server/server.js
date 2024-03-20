@@ -149,7 +149,7 @@ app.get("/shops/view/:shop_id", cors(), async (req, res) => {
   try {
     console.log("from server.js: shopId: ", shopId, "ObjectId(shopId): ", ObjectId(shopId));
     const shop = await shopsCollection.findOne({ _id: ObjectId(shopId) });
-    const items = await itemsCollection.find({ shop_id: shopId }).toArray();
+    const items = await itemsCollection.find({ shop_id: ObjectId(shopId) }).toArray();
 
     if (shop && items) {
       res.status(200).json({
