@@ -6,18 +6,41 @@ import { useEffect, useState } from "react";
 
 export default function ListSection({
   header,
+  searchQuery = "",
+  currPosition = null as [number, number] | null
 }: {
   header: string;
+  searchQuery?: string;
+  currPosition?: [number, number] | null;
 }) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   const [numberOfItemstoShow, setNumberOfItemstoShow] = useState(3);
 
   useEffect(() => {
-    fetchAllShops();
+    if(header === "Near you") {
+      //Fetch Nearby Data
+      if (currPosition) {
+        fetchNearbyShops(currPosition[1], currPosition[0  ]); // [longitude, latitude]
+      } else {
+        fetchAllShops(); // Default coordinates
+      }
+    }
+    
+    if(header === "Other Recommendations") {
+      fetchAllShops();
+    } 
     //setRestaurants(sampleRestaurants);
-  }, []);
+  }, [currPosition]);
 
+  useEffect(() => {
+    if(searchQuery !== "") {
+      fetchSearchShops(searchQuery);
+    }
+  }, [searchQuery]);
+  
+
+  //Get all Shops
   async function fetchAllShops() {
     try {
       const res = await fetch('http://localhost:5000/shops/index', {
@@ -30,17 +53,24 @@ export default function ListSection({
     
       const data = await res.json();
       const body = data.body;
-      //console.log("Get All Shops from Server:\n" + JSON.stringify(body, null, 2));
+      console.log("Get All Shops from Server:\n" + JSON.stringify(body, null, 2));
       setRestaurants(body);
     } catch (error) {
       console.error('Error fetching shops:', error);
     }
   }
 
-  async function fetchNearbyShops() {
+  //Get Nearby Shops
+  async function fetchNearbyShops(longitude: number, latitude: number) {
     try {
+      console.log("My location: " + longitude + ", " + latitude);
       const res = await fetch('http://localhost:5000/shops/nearby', {
+        method: "POST",
         mode: 'cors',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ longitude, latitude }),
       });
     
       if (!res.ok) {
@@ -49,13 +79,34 @@ export default function ListSection({
     
       const data = await res.json();
       const body = data.body;
-      //console.log("Get Nearby Shops from Server:\n" + JSON.stringify(body, null, 2));
+      //console.log("Nearby Restaurants:\n" + JSON.stringify(body, null, 2));
       setRestaurants(body);
+
     } catch (error) {
-      console.error('Error fetching nearby shops:', error);
+      console.error('Error fetching shops:', error);
     }
   }
 
+  //Search for Shops
+  async function fetchSearchShops(query : string) {
+    try {
+      const res = await fetch(`http://localhost:5000/shops/search?q=${encodeURIComponent(query)}`, {
+      mode: 'cors',
+    });
+    
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+    
+      const data = await res.json();
+      const body = data.body;
+      //console.log("Get Search Shops from Server:\n" + JSON.stringify(body, null, 2));
+      setRestaurants(body);
+    } catch (error) {
+      console.error('Error fetching shops:', error);
+    }
+  }
+  
   const showMoreRestaurants = () => {
     // Increment the visible restaurants count by 3
     setNumberOfItemstoShow((prevVisible) => prevVisible + 3);
