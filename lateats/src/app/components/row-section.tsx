@@ -158,7 +158,7 @@ export default function RowSection({
         <div className="text-3xl font-semibold text-primary">{header}</div>
         <div className="flex flex-row -mx-2 overflow-x-auto">
           {restaurants.map((restaurant) => (
-            <div className="m-2 p-2 flex flex-col border rounded-md shadow-md min-h-64 min-w-40" key={restaurant.id}>
+            <div className="m-2 p-2 flex flex-col border rounded-md shadow-md min-h-64 min-w-40" key={restaurant._idid}>
               <img
                 src={restaurant.picture}
                 className="w-full h-32 object-cover rounded-md"

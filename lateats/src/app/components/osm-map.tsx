@@ -36,7 +36,7 @@ export default function Map({ restaurants }: { restaurants: Restaurant[] }) {
           restaurants.length > 0 &&
           restaurants.map((restaurant) => (
             <Marker
-              key={restaurant.id}
+              key={restaurant._id}
               position={[restaurant.latitude, restaurant.longitude]}
               icon={customIcon}
             ></Marker>
