@@ -62,24 +62,9 @@ export default function ShopInfo({
       <ItemModal />
 
       <div className="hidden lg:block bg-primary p-4 rounded-md shadow-md">
-        {isEditing ? (
-          <div className="flex">
-            <div className="font-semibold text-2xl text-white font-serif self-center mr-2"> Name: </div>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              className="font-bold text-3xl text-white font-serif min-w-64 bg-transparent border-2 border-white rounded-md p-1 "
-            />
-          </div>
-        ) : (
-          <div className="font-bold text-3xl text-white font-serif min-w-64">
-            {restaurant.name}
-          </div>
-        )}
-
+        <div className="font-bold text-3xl text-white font-serif min-w-64">
+          {restaurant.name}
+        </div>
         <div className="font-light text-lg text-white mb-1">
           {restaurant.cuisine}
         </div>
@@ -101,10 +86,19 @@ export default function ShopInfo({
         </div>
       </div>
 
-      {isUserOwner && (
-        <div className="self-center text-center mt-2 min-w-64">
+      {isUserOwner ? (
+        <div className="self-center text-center mt-2 min-w-72">
           <button
-            onClick={() => setIsEditing(!isEditing)}
+            id="edit-button"
+            onClick={() => {
+              setIsEditing(!isEditing);
+              const editButton = document.getElementById("edit-button");
+              if (editButton) {
+                editButton.innerText = isEditing ? "Edit" : "Cancel";
+                editButton.classList.toggle("animate-pulse");
+                editButton.classList.toggle("!bg-red-300"); 
+              }
+            }}
             className="px-4 py-2 text-2xl h-fit font-semibold bg-yellow-300 hover:bg-yellow-400 text-white rounded-lg drop-shadow-md mr-2"
           >
             Edit
@@ -116,6 +110,8 @@ export default function ShopInfo({
             Add
           </button>
         </div>
+      ) : (
+        <div className="min-w-72"></div>
       )}
     </div>
   );

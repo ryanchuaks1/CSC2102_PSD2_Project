@@ -381,7 +381,8 @@ app.post("/items/create", cors(), async (req, res) => {
   }
 });
 
-app.delete("/items/delete", cors(), async (req, res) => {
+app.post("/items/delete", cors(), async (req, res) => {
+  console.log("from server.js: req.body: ", req.body);
   const itemData = req.body;
   const itemsCollection = db.collection("items");
 

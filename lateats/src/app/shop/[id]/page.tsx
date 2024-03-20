@@ -45,6 +45,7 @@ export default function Shop({ params }: { params: { id: string } }) {
                 key={item._id}
                 item={item}
                 discount={restaurant.discount}
+                isEditing={isEditing}
               />
             ))}
           </div>

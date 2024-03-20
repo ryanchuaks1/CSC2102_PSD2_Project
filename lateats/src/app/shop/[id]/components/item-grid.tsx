@@ -3,16 +3,56 @@ import Image from "next/image";
 export default function ItemGrid({
   item,
   discount,
+  isEditing,
 }: {
   item: FoodItem;
   discount: number;
+  isEditing: boolean;
 }) {
+  function toggleModel() {
+    const modal = document.getElementById("item-modal");
+    if (modal) {
+      modal.classList.toggle("hidden");
+    }
+  }
+
+  const deleteItem = async () => {
+    console.log(item._id);
+    const res = await fetch("http://localhost:5000/items/delete", {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: item._id }),
+    });
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    const data = await res.json();
+    console.log(data);
+    window.location.reload();
+  };
+
   return (
-    <div
-      key={item._id}
-      className="m-2 shadow-md border rounded-md hover:cursor-zoom-in transition hover:scale-150"
-    >
+    <div key={item._id} className="m-2 shadow-md border rounded-md">
       <div className="pb-2">
+        {isEditing && (
+          <div className="flex">
+            <button
+              onClick={toggleModel}
+              className="lg:text-lg m-1 lg:m-2 p-2 px-2 lg:px-4 bg-yellow-400 rounded-md text-white flex-grow"
+            >
+              Edit
+            </button>
+            <button
+              onClick={deleteItem}
+              className="lg:text-lg m-1 lg:m-2 p-2 px-2 lg:px-4 bg-red-400 rounded-md text-white flex-grow"
+            >
+              Delete
+            </button>
+          </div>
+        )}
         <Image
           src={`data:image/jpeg;base64,${item.image}`}
           width={300}
