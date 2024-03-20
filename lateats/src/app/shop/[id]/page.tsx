@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MobileHeader from "./components/shop-header";
 import Link from "next/link";
 import ItemGrid from "./components/item-grid";
 import ShopInfo from "./components/shop-info";

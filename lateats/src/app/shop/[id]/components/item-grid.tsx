@@ -1,4 +1,6 @@
+import React, { useState } from "react";
 import Image from "next/image";
+import ItemModal from "./item-modal";
 
 export default function ItemGrid({
   item,
@@ -9,12 +11,11 @@ export default function ItemGrid({
   discount: number;
   isEditing: boolean;
 }) {
-  function toggleModel() {
-    const modal = document.getElementById("item-modal");
-    if (modal) {
-      modal.classList.toggle("hidden");
-    }
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   const deleteItem = async () => {
     console.log(item._id);
@@ -40,7 +41,7 @@ export default function ItemGrid({
         {isEditing && (
           <div className="flex">
             <button
-              onClick={toggleModel}
+              onClick={toggleModal} // Use toggleModal directly here
               className="lg:text-lg m-1 lg:m-2 p-2 px-2 lg:px-4 bg-yellow-400 rounded-md text-white flex-grow"
             >
               Edit
@@ -71,6 +72,7 @@ export default function ItemGrid({
           </div>
         </div>
       </div>
+      {isModalOpen && <ItemModal item={item} setIsModalOpen={setIsModalOpen} />}
     </div>
   );
 }

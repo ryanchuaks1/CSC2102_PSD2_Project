@@ -13,12 +13,8 @@ export default function ShopInfo({
   isEditing: boolean;
 }) {
   const [isUserOwner, setIsUserOwner] = useState(false);
-  function toggleModel() {
-    const modal = document.getElementById("item-modal");
-    if (modal) {
-      modal.classList.toggle("hidden");
-    }
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const discounttime = new Date(restaurant.discounttime).toLocaleTimeString(
     [],
     { hour: "2-digit", minute: "2-digit" }
@@ -59,8 +55,7 @@ export default function ShopInfo({
 
   return (
     <div className="lg:flex lg:p-6 lg:justify-between">
-      <ItemModal />
-
+      {isModalOpen && <ItemModal setIsModalOpen={setIsModalOpen} />}
       <div className="hidden lg:block bg-primary p-4 rounded-md shadow-md">
         <div className="font-bold text-3xl text-white font-serif min-w-64">
           {restaurant.name}
@@ -96,7 +91,7 @@ export default function ShopInfo({
               if (editButton) {
                 editButton.innerText = isEditing ? "Edit" : "Cancel";
                 editButton.classList.toggle("animate-pulse");
-                editButton.classList.toggle("!bg-red-300"); 
+                editButton.classList.toggle("!bg-red-300");
               }
             }}
             className="px-4 py-2 text-2xl h-fit font-semibold bg-yellow-300 hover:bg-yellow-400 text-white rounded-lg drop-shadow-md mr-2"
@@ -104,7 +99,7 @@ export default function ShopInfo({
             Edit
           </button>
           <button
-            onClick={toggleModel}
+            onClick={() => setIsModalOpen(true)}
             className="px-4 py-2 text-2xl h-fit font-semibold bg-green-300 hover:bg-green-400 text-white rounded-lg drop-shadow-md"
           >
             Add
