@@ -402,6 +402,36 @@ app.post("/items/create", cors(), async (req, res) => {
   }
 });
 
+app.post("/items/update", cors(), async (req, res) => {
+  const { token, item } = req.body;
+  const usersCollection = db.collection("users");
+  const itemsCollection = db.collection("items");
+
+  try {
+    const user = await usersCollection.findOne({ token: token });
+    if (!user) {
+      res.status(404).json({ result: false, message: "Invalid token" });
+    }
+
+    const updateResult = await itemsCollection.updateOne(
+      { _id: ObjectId(item._id) },
+      { $set: { 
+        name: item.name,
+        base_price: item.base_price,
+        image: item.image,
+        shop_id: user.shop_id
+      } }
+    );
+
+    res
+      .status(201)
+      .json({ result: true, message: "Shop updated successfully!" });
+  } catch (error) {
+    console.error("Error updating shop:", error);
+    res.status(500).json({ result: false, message: "Internal server error" });
+  }
+});
+
 app.post("/items/delete", cors(), async (req, res) => {
   console.log("from server.js: req.body: ", req.body);
   const itemData = req.body;
