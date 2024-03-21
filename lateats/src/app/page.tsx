@@ -63,7 +63,7 @@ export default function Home() {
             ) : (
               <div className="lg:w-96 lg:overflow-y-scroll lg:h-[88vh] -mt-7 pt-7">
                 <ListSection header="Near you" currPosition={currPosition}/>
-                <ListSection header="Other Recommendations"/>
+                <ListSection header="Recommended"/>
                 <RowSection header="Highest Rated" />
               </div>
             )

@@ -20,7 +20,7 @@ export default function ItemModal({
       setFormData({
         itemName: item.name || "",
         basePrice: item.base_price.toString() || "",
-        imageFile: item.image ? `data:image/jpeg;base64,${item.image}` : "",
+        imageFile: `data:image/jpeg;base64,${item.image}` || "",
       });
     }
   }, [item]);
@@ -58,6 +58,7 @@ export default function ItemModal({
           const image_b64 = resizedImage.split(",")[1];
 
           const new_item = {
+            _id: item?._id,
             name: formData.itemName,
             base_price: formData.basePrice,
             image: image_b64,
@@ -65,8 +66,10 @@ export default function ItemModal({
 
           let url: string;
           if (item) {
-            url = `http://localhost:5000/items/update/${item._id}`;
+            console.log("Updating item");
+            url = `http://localhost:5000/items/update`;
           } else {
+            console.log("Creating new item");
             url = `http://localhost:5000/items/create`;
           }
           // Send Form

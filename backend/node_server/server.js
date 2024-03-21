@@ -413,6 +413,7 @@ app.post("/items/update", cors(), async (req, res) => {
       res.status(404).json({ result: false, message: "Invalid token" });
     }
 
+    console.log("from server.js: item: ", item);
     const updateResult = await itemsCollection.updateOne(
       { _id: ObjectId(item._id) },
       { $set: { 

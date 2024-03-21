@@ -27,7 +27,7 @@ export default function ListSection({
       }
     }
     
-    if(header === "Other Recommendations") {
+    if(header === "Recommended") {
       fetchAllShops();
     } 
     //setRestaurants(sampleRestaurants);

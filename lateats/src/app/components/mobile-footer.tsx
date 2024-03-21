@@ -4,11 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function MobileFooter() {
-  const [currentUserToken, setCurrentUserToken] = useState<string>("");
-
-  // checkCurrentUserToken(sessionStorage.getItem("token")); {
-
-  // }
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const currentUser = sessionStorage.getItem("token");
@@ -17,6 +13,7 @@ export default function MobileFooter() {
         mode: "cors",
       });
       console.log("current user:\n" + JSON.stringify(res, null, 2));
+      setIsLoggedIn(true);  
     } 
   }, []);
 
@@ -36,7 +33,7 @@ export default function MobileFooter() {
 
   return (
     <div className="h-24 bg-white p-4 flex justify-between shadow-inner shaodw-lg">
-      {sessionStorage.getItem("token") ? (
+      {isLoggedIn ? (
           <button
             onClick={logout}
             className="p-4 text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md"
@@ -60,18 +57,3 @@ export default function MobileFooter() {
     </div>
   );
 }
-
-// getCurrentUserByToken(currentUserToken) {
-//   await fetch("https://api.lateats.com/v1/users/me", {
-//     method: "POST",
-//     mode: "cors",
-//     headers: {
-//       "Content-Type": "application/json",
-//   },body: JSON.stringify({
-//     token: currentUserToken,
-//   }),
-//     .then((response) => response.json())
-//     .then((data) => {
-//       console.log(data);
-//     });
-// }

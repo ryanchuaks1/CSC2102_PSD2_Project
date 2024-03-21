@@ -1,9 +1,11 @@
 'use client';
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function WebHeader() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     const currentUser = sessionStorage.getItem("token");
     if (currentUser) {
@@ -11,6 +13,7 @@ export default function WebHeader() {
         mode: "cors",
       });
       console.log("current user:\n" + JSON.stringify(res, null, 2));
+      setIsLoggedIn(true);
     } 
   }, []);
 
@@ -32,7 +35,7 @@ export default function WebHeader() {
         Zero leftovers for f&b owners
       </div>
       <div className="self-center">
-        {sessionStorage.getItem("token") ? (
+        {isLoggedIn ? (
           <button
             onClick={logout}
             className="bg-white text-primary font-semibold px-4 py-2 rounded-md text-xl"
