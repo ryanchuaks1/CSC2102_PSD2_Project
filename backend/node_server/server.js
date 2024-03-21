@@ -386,7 +386,7 @@ app.post("/items/create", cors(), async (req, res) => {
       name: item.name,
       base_price: item.base_price,
       image: item.image,
-      shop_id: user.shop_id
+      shop_id: user.shop_id,
     });
 
     res
