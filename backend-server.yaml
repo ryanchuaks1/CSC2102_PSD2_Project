@@ -3,13 +3,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-server-service
+  name: backend-server
+  namespace: lateats
 spec:
   type: NodePort
   ports:
   - port: 5000
     targetPort: 5000
-    NodePort: 5000
+    nodePort: 30001
   selector:
     app: backend-server
 
@@ -25,13 +26,13 @@ kind: Deployment
 
 # Dictionary of information about the object
 metadata:
-  name: backend-server-deployment
+  name: backend-server
+  namespace: lateats
 
 # Additional information about the object
 spec:
   # desired no. of pods at all times
-  replicas: 3
-
+  replicas: 2
   # labels and selectors (e.g., env: dev)
   selector:
     # this associates the pod and the deployment
@@ -39,13 +40,15 @@ spec:
       app: backend-server
   template:
     metadata:
+      namespace: lateats
       labels:
         app: backend-server
     spec:
       containers:
-      - name: backend-server-deployment
+      - name: backend-server
         image: ghcr.io/leungwj/lateats-backend-server:latest
         ports:
         - containerPort: 5000
+        command: ["npm", "start"]
 
 

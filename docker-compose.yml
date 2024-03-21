@@ -2,9 +2,10 @@ version: '3.8'
 
 services:
   node_server:
-    build:
-      context: ./backend/node_server
-      dockerfile: Dockerfile
+    image: ghcr.io/leungwj/lateats-backend-server:latest
+    # build:
+    #   context: ./backend/node_server
+    #   dockerfile: Dockerfile
     container_name: node_server
     restart: always
     ports:
