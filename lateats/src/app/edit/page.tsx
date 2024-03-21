@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import Snackbar from "./components/snackbar";
 
 export default function Edit() {
-
   const [formData, setFormData] = useState({
     shopName: "",
     street: "",
@@ -21,7 +20,7 @@ export default function Edit() {
 
   //Snack bar variables
   const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   //Store the Current Shop ID
@@ -32,9 +31,7 @@ export default function Edit() {
     //Check if user is logged in
     if (sessionStorage.getItem("token") == null) {
       window.location.href = "/login";
-    }
-    else
-    {
+    } else {
       setLoading(false);
     }
 
@@ -44,25 +41,28 @@ export default function Edit() {
         const token = sessionStorage.getItem("token");
 
         const user = await fetch(`http://localhost:5000/users/token/${token}`, {
-          mode: 'cors',
+          mode: "cors",
         });
 
         if (!user.ok) {
-          throw new Error('Failed to fetch user data');
+          throw new Error("Failed to fetch user data");
         }
 
         const userData = await user.json(); // Extract user data from response
         //console.log("User: " + JSON.stringify(userData, null, 2));
-        
+
         //Get restaurant by user
-        const res = await fetch(`http://localhost:5000/users/shop/${userData.body._id}`, {
-          mode: 'cors',
-        });
+        const res = await fetch(
+          `http://localhost:5000/users/shop/${userData.body._id}`,
+          {
+            mode: "cors",
+          }
+        );
 
         if (!res.ok) {
-          throw new Error('Failed to fetch shop data');
+          throw new Error("Failed to fetch shop data");
         }
-        
+
         const data = await res.json();
         const body = data.body;
 
@@ -80,15 +80,13 @@ export default function Edit() {
         });
 
         setCurrShopId(body._id); // Store the shop id
-
       } catch (error) {
-        console.error('Error fetching shops:', error);
+        console.error("Error fetching shops:", error);
       }
     }
 
     setData();
   }, []);
-
 
   //On Input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,23 +106,27 @@ export default function Edit() {
   };
 
   //Wei Jun's Resize Function
-  function resizeImage(image_src: string, width: number, height: number): Promise<string> {
+  function resizeImage(
+    image_src: string,
+    width: number,
+    height: number
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       const img = new Image() as HTMLImageElement;
-  
+
       img.onload = () => {
         canvas.width = width;
         canvas.height = height;
         ctx?.drawImage(img, 0, 0, width, height);
         resolve(canvas.toDataURL("image/jpeg"));
       };
-  
+
       img.onerror = (error) => {
         reject(error);
       };
-  
+
       img.src = image_src;
     });
   }
@@ -138,7 +140,7 @@ export default function Edit() {
       setShowSnackbar(false);
     }, 5000);
   };
-  
+
   const handleSubmit = async () => {
     try {
       //Validate Fields
@@ -168,27 +170,25 @@ export default function Edit() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(
-          {
-            _id: currShopId,
-            name: formData.shopName,
-            street: formData.street,
-            longitude: formData.longitude,
-            latitude: formData.latitude,
-            cuisine: formData.cuisine,
-            closingtime: formData.closingTime,
-            discounttime: formData.discountTime,
-            discount: formData.discount,
-            picture: formData.image,
-          }
-        ),
+        body: JSON.stringify({
+          _id: currShopId,
+          name: formData.shopName,
+          street: formData.street,
+          longitude: formData.longitude,
+          latitude: formData.latitude,
+          cuisine: formData.cuisine,
+          closingtime: formData.closingTime,
+          discounttime: formData.discountTime,
+          discount: formData.discount,
+          picture: formData.image,
+        }),
       });
 
       if (!res.ok) {
         throw new Error("Failed to update shop: " + res.statusText);
-      }else{
+      } else {
         showMessage("Form Send Successfully");
-        window.location.reload();
+        window.location.href = "/";
       }
     } catch (error) {
       console.error("Error creating account:", (error as Error).message);
@@ -332,10 +332,7 @@ export default function Edit() {
           </button>
         </div>
 
-        <Snackbar
-            message={snackbarMessage}
-            visible={showSnackbar}
-          />
+        <Snackbar message={snackbarMessage} visible={showSnackbar} />
       </div>
     </div>
   );

@@ -130,10 +130,6 @@ export default function ListSection({
                   {restaurant.discount}% off
                 </div>
                 <div className="">
-                  {/* {restaurant.closingtime.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }).toLocaleLowerCase()} */}
                   Closing Time: {restaurant.closingtime}
                 </div>
               </div>

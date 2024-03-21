@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ItemModal from "./item-modal";
+import Link from "next/link";
 
 export default function ShopInfo({
   restaurant,
@@ -66,6 +67,16 @@ export default function ShopInfo({
         <div className="font-medium text-lg text-white">
           {restaurant.street}
         </div>
+        {isEditing && (
+          <div
+            onClick={() => {
+              window.location.href = `/edit`;
+            }}
+            className="px-4 py-2 m-2 text-center text-xl font-semibold bg-yellow-300 hover:bg-yellow-400 text-white rounded-lg drop-shadow-md"
+          >
+            Edit Shop
+          </div>
+        )}
       </div>
 
       <div className="">
@@ -77,7 +88,7 @@ export default function ShopInfo({
         </div>
         <div className="text-center font-medium">
           <span className="text-primary font-bold">{restaurant.discount}%</span>{" "}
-          off starts at: {discounttime}
+          off starts at: {restaurant.discounttime}
         </div>
       </div>
 
