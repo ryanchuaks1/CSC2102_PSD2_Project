@@ -69,7 +69,7 @@ export default function Home() {
             )
           }
         <div className="lg:flex-grow lg:block lg:-mt-7">
-          <Map currPosition={currPosition} isParentLoading={loading} />
+          <Map currPosition={currPosition} isParentLoading={loading} searchQuery={searchQuery}/>
         </div>
       </div>
       <div className="sticky bottom-0 w-full lg:hidden">

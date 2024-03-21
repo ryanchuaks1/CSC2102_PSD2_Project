@@ -11,8 +11,12 @@ import { captureRejectionSymbol } from "events";
 export default function Map(
   { currPosition, 
     isParentLoading,
-   } : { currPosition: [number, number] | null, isParentLoading: boolean}
-) {
+    searchQuery
+   } : { 
+    currPosition: [number, number] | null,
+    isParentLoading: boolean,
+    searchQuery: string
+  }) {
 
   //Store Restaurants
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -67,8 +71,12 @@ export default function Map(
     }
   }
   //ENDIF - If statement in use effect
+  //        |
+  //        |
+  //       \ /  
+  //        v
 
-  useEffect(() => {
+  async function getShops() {
     //Update Statueses
     if (!isParentLoading && currPosition != null) {
       console.log("Fetching Nearby Data");
@@ -85,7 +93,45 @@ export default function Map(
     } else {
       fetchAllShops(); // Default coordinates
     }
+  }
+
+
+  //If SearchQuery != null get the search data
+  async function fetchSearchShops(query : string) {
+    try {
+      const res = await fetch(`http://localhost:5000/shops/search?q=${encodeURIComponent(query)}`, {
+      mode: 'cors',
+    });
+    
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+    
+      const data = await res.json();
+      const body = data.body;
+      //console.log("Get Search Shops from Server:\n" + JSON.stringify(body, null, 2));
+      setRestaurants(body);
+    } catch (error) {
+      console.error('Error fetching shops:', error);
+    }
+  }
+
+  useEffect(() => {
+    getShops();
   }, [isParentLoading]);
+
+  useEffect(() => {
+    if(searchQuery !== "") {
+      setLoading(true);
+      fetchSearchShops(searchQuery);
+      setLoading(false);
+    }
+    else
+    {
+      setLoading(true);
+      getShops();
+    }
+  }, [searchQuery]);
 
   const openMap = () => {
     const map = document.getElementById("map");

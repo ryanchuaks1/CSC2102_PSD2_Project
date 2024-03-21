@@ -22,11 +22,9 @@ export default function MobileFooter() {
 
   //logout function
   const logout = () => {
-    if (typeof window !== 'undefined') {
-      window.sessionStorage.removeItem("token");
-      console.log("Logged out");
-      window.location.reload(); // Add this line to refresh the page after logout
-    }
+    sessionStorage.removeItem("token");
+    console.log("Logged out");
+    window.location.reload(); // Add this line to refresh the page after logout
   };
 
   const openMap = () => {
@@ -38,7 +36,7 @@ export default function MobileFooter() {
 
   return (
     <div className="h-24 bg-white p-4 flex justify-between shadow-inner shaodw-lg">
-      {typeof window !== 'undefined' && window.sessionStorage.getItem("token") ? (
+      {sessionStorage.getItem("token") ? (
           <button
             onClick={logout}
             className="p-4 text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md"
