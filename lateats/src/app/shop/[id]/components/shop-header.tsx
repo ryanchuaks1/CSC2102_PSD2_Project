@@ -1,17 +1,26 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function ShopHeader({
-  restaurant,
-}: {
-  restaurant: Restaurant;
-}) {
+export default function ShopHeader({ restaurant }: { restaurant: Restaurant }) {
+  const isLoggedIn = sessionStorage.getItem("token") ? true : false;
+
+  //logout function
+  const logout = () => {
+    sessionStorage.removeItem("token");
+    console.log("Logged out");
+    window.location.reload(); // Add this line to refresh the page after logout
+  };
+
   return (
     <div className="h-auto bg-primary p-6">
       <div className="flex flex-col lg:flex-row lg:justify-between">
         <div className="block lg:hidden font-bold text-4xl text-white mb-1 font-serif lg:place-self-center">
           {restaurant.name}
         </div>
-        <Link href={"/"} className="hidden lg:block font-bold text-4xl text-white mb-1 font-serif lg:place-self-center">
+        <Link
+          href={"/"}
+          className="hidden lg:block font-bold text-4xl text-white mb-1 font-serif lg:place-self-center"
+        >
           Lateats Web
         </Link>
         <div className="font-light text-xl text-white mb-2 block lg:hidden">
@@ -28,9 +37,19 @@ export default function ShopHeader({
           </div>
         </div>
         <div className="hidden lg:flex">
-          <div className="p-4 text-2xl font-semibold text-primary bg-white rounded-lg drop-shadow-md mr-4">
+          {isLoggedIn ? (<button
+            onClick={logout}
+            className="p-4 text-2xl font-semibold text-primary bg-white rounded-lg drop-shadow-md mr-4"
+          >
             Logout
-          </div>
+          </button>) : (
+            <Link
+              href={"/login"}
+              className="p-4 text-2xl font-semibold text-primary bg-white rounded-lg drop-shadow-md mr-4"
+            >
+              Stall Login
+            </Link>
+          )}
           <Link
             href={"/"}
             className="p-4 text-2xl font-semibold text-primary bg-white rounded-lg drop-shadow-md hover:bg-gray-100 transition-all duration-200"

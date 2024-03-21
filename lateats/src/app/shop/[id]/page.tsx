@@ -10,6 +10,13 @@ export default function Shop({ params }: { params: { id: string } }) {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [isEditing, setIsEditing] = useState(false);
+  const isLoggedIn = sessionStorage.getItem("token") ? true : false;
+
+  const logout = () => {
+    sessionStorage.removeItem("token");
+    console.log("Logged out");
+    window.location.reload(); // Add this line to refresh the page after logout
+  };
 
   useEffect(() => {
     // Find the restaurant with the matching id
@@ -48,10 +55,25 @@ export default function Shop({ params }: { params: { id: string } }) {
               />
             ))}
           </div>
-          <div className="sticky bottom-0 w-screen p-4 flex justify-center lg:hidden">
+          <div className="sticky bottom-0 w-screen p-4 flex lg:hidden">
+            {isLoggedIn ? (
+              <button
+                onClick={logout}
+                className="p-4 text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md mr-2"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href={"/login"}
+                className="p-4 text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md mr-2"
+              >
+                Stall Login
+              </Link>
+            )}
             <Link
-              href="/"
-              className="p-4 text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md w-full text-center"
+              href={"/"}
+              className="p-4 text-2xl font-semibold text-white bg-primary rounded-lg drop-shadow-md flex-grow text-center"
             >
               Back
             </Link>

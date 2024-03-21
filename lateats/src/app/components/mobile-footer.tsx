@@ -13,7 +13,7 @@ export default function MobileFooter() {
         mode: "cors",
       });
       console.log("current user:\n" + JSON.stringify(res, null, 2));
-      setIsLoggedIn(true);  
+      setIsLoggedIn(true);
     } 
   }, []);
 

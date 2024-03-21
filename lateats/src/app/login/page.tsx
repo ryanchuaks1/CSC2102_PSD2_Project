@@ -65,7 +65,10 @@ export default function Login() {
         // window.location.href = "/";
 
         //redirect to home page
-        window.location.href = "/";
+        // window.location.href = "/";
+
+        // nav back one page
+        window.history.back();
       } else {
         throw new Error("Login Failed");
       }
