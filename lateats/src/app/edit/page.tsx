@@ -251,17 +251,17 @@ export default function Edit() {
           <div className="flex flex-col lg:flex-row items-center p-2 lg:p-0">
             <input
               type="number"
-              name="longitude"
-              placeholder="Longitude"
-              value={formData.longitude}
+              name="latitude"
+              placeholder="Latitude"
+              value={formData.latitude}
               onChange={handleChange}
               className="border-b-2 border-primary p-2 m-2 mb-8 w-full"
             ></input>
             <input
               type="number"
-              name="latitude"
-              placeholder="Latitude"
-              value={formData.latitude}
+              name="longitude"
+              placeholder="Longitude"
+              value={formData.longitude}
               onChange={handleChange}
               className="border-b-2 border-primary p-2 m-2 mb-8 w-full"
             ></input>

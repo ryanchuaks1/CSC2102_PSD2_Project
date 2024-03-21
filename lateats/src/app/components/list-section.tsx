@@ -120,12 +120,12 @@ export default function ListSection({
         <Link href={`/shop/${restaurant._id}`} key={restaurant._id}> 
           <div className="my-3 hover:bg-gray-100 transition-all duration-200">
             <div className="flex justify-between">
-              <div className="text-left">
+              <div className="text-left flex-1">
                 <div className="text-lg font-medium">{restaurant.name}</div>
                 <div className="">{restaurant.cuisine}</div>
                 <div className="">{restaurant.street}</div>
               </div>
-              <div className="text-right">
+              <div className="text-right flex-1">
                 <div className="text-2xl font-medium text-primary">
                   {restaurant.discount}% off
                 </div>

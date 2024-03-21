@@ -21,7 +21,7 @@ export default function Register() {
 
   //Snack bar variables
   const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -64,7 +64,9 @@ export default function Register() {
       }
 
       console.log("Sending Form\n" + JSON.stringify(formData, null, 2));
-      const hashedPassword = createHash("sha256").update(formData.password).digest("hex");
+      const hashedPassword = createHash("sha256")
+        .update(formData.password)
+        .digest("hex");
       //Send Form
       const res = await fetch("http://localhost:5000/shops/account/create", {
         method: "POST",
@@ -165,17 +167,17 @@ export default function Register() {
           <div className="flex flex-col lg:flex-row items-center p-2 lg:p-0">
             <input
               type="number"
-              name="longitude"
-              placeholder="Longitude"
-              value={formData.longitude}
+              name="latitude"
+              placeholder="Latitude"
+              value={formData.latitude}
               onChange={handleChange}
               className="border-b-2 border-primary p-2 m-2 mb-8 w-full"
             ></input>
             <input
               type="number"
-              name="latitude"
-              placeholder="Latitude"
-              value={formData.latitude}
+              name="longitude"
+              placeholder="Longitude"
+              value={formData.longitude}
               onChange={handleChange}
               className="border-b-2 border-primary p-2 m-2 mb-8 w-full"
             ></input>
@@ -235,11 +237,7 @@ export default function Register() {
             </Link>
           </div>
 
-          <Snackbar
-            message={snackbarMessage}
-            visible={showSnackbar}
-          />
-
+          <Snackbar message={snackbarMessage} visible={showSnackbar} />
         </div>
       </div>
     </div>
