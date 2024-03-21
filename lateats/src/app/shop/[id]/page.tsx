@@ -39,7 +39,7 @@ export default function Shop({ params }: { params: { id: string } }) {
     <div>
       {restaurant ? (
         <div className="min-h-screen bg-white">
-          <ShopHeader restaurant={restaurant} />
+          <ShopHeader restaurant={restaurant} isEditing={isEditing} />
           <ShopInfo
             restaurant={restaurant}
             setIsEditing={setIsEditing}

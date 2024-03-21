@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function RowSection({ header }: { header: string }) {
@@ -39,10 +40,13 @@ export default function RowSection({ header }: { header: string }) {
             className="m-2 p-2 flex flex-col border rounded-md shadow-md min-h-64 min-w-40"
             key={restaurant._id}
           >
-            <img
-              src={restaurant.picture}
-              className="w-full h-32 object-cover rounded-md"
-            ></img>
+            <Image
+              src={restaurant.picture ?? ""}
+              width={300}
+              height={300}
+              className="rounded-md"
+              alt="Picture of restaurant"
+            />
             <div className="text-left mb-2">
               <div className="text-lg font-medium">{restaurant.name}</div>
               <div className="text-sm">{restaurant.cuisine}</div>

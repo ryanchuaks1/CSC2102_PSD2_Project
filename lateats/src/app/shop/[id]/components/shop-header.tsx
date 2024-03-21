@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function ShopHeader({ restaurant }: { restaurant: Restaurant }) {
+export default function ShopHeader({ restaurant, isEditing }: { restaurant: Restaurant, isEditing: boolean }) {
   const isLoggedIn = sessionStorage.getItem("token") ? true : false;
 
   //logout function
@@ -29,6 +29,16 @@ export default function ShopHeader({ restaurant }: { restaurant: Restaurant }) {
         <div className="font-medium text-lg text-white block lg:hidden">
           {restaurant.street}
         </div>
+        {isEditing && (
+          <div
+            onClick={() => {
+              window.location.href = `/edit`;
+            }}
+            className="lg:hidden px-4 py-2 m-2 text-center text-xl font-semibold bg-yellow-300 hover:bg-yellow-400 text-white rounded-lg drop-shadow-md"
+          >
+            Edit Shop
+          </div>
+        )}
         <div className="hidden lg:block text-center mt-3">
           <div className="font-light text-lg text-white leading-5">
             Discounted food for you
