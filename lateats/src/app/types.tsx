@@ -17,6 +17,7 @@ type FoodItem = {
   name: string;
   base_price: number;
   image: string;
+  isSoldOut: boolean;
 };
 
 type Account = {
