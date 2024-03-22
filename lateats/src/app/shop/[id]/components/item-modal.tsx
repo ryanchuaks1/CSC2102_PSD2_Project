@@ -62,6 +62,7 @@ export default function ItemModal({
             name: formData.itemName,
             base_price: formData.basePrice,
             image: image_b64,
+            isSoldOut: false,
           };
 
           let url: string;

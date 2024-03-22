@@ -387,6 +387,7 @@ app.post("/items/create", cors(), async (req, res) => {
       base_price: item.base_price,
       image: item.image,
       shop_id: user.shop_id,
+      isSoldOut: false,
     });
 
     res
@@ -420,7 +421,8 @@ app.post("/items/update", cors(), async (req, res) => {
         name: item.name,
         base_price: item.base_price,
         image: item.image,
-        shop_id: user.shop_id
+        shop_id: user.shop_id,
+        isSoldOut: item.isSoldOut,
       } }
     );
 
