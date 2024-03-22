@@ -48,7 +48,7 @@ spec:
       - name: frontend-server
         image: ghcr.io/leungwj/lateats-frontend-server:latest
         ports:
-        - containerPort: 5000
-        command: ["npm", "start"]
+        - containerPort: 3000
+        command: ["npm", "run", "dev"]
 
 
