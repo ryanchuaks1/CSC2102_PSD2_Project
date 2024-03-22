@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { BASE_URL } from "@/constants";
 
 
 export default function ListSection({
@@ -43,7 +44,7 @@ export default function ListSection({
   //Get all Shops
   async function fetchAllShops() {
     try {
-      const res = await fetch('http://localhost:5000/shops/index', {
+      const res = await fetch(BASE_URL + '/shops/index', {
         mode: 'cors',
       });
     
