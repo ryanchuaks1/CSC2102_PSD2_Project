@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import ItemModal from "./item-modal";
+import { BASE_URL } from "@/constants";
 
 export default function ItemGrid({
   item,
@@ -19,7 +20,7 @@ export default function ItemGrid({
 
   const deleteItem = async () => {
     console.log(item._id);
-    const res = await fetch("http://localhost:5000/items/delete", {
+    const res = await fetch( BASE_URL + "/items/delete", {
       method: "POST",
       mode: "cors",
       headers: {
@@ -44,7 +45,7 @@ export default function ItemGrid({
       isSoldOut: !item.isSoldOut,
     };
 
-    const res = await fetch("http://localhost:5000/items/update", {
+    const res = await fetch( BASE_URL + "/items/update", {
       method: "POST",
       mode: "cors",
       headers: {

@@ -1,5 +1,6 @@
 "use client";
 
+import { BASE_URL } from "@/constants";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -9,7 +10,7 @@ export default function MobileFooter() {
   useEffect(() => {
     const currentUser = sessionStorage.getItem("token");
     if (currentUser) {
-      const res = fetch(`http://localhost:5000/users/token/${currentUser}`, {
+      const res = fetch( BASE_URL + `/users/token/${currentUser}`, {
         mode: "cors",
       });
       console.log("current user:\n" + JSON.stringify(res, null, 2));

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { createHash } from "crypto";
+import { BASE_URL } from "@/constants";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ export default function Login() {
       const hashedPassword = createHash("sha256")
         .update(formData.password)
         .digest("hex");
-      const res = await fetch("http://localhost:5000/users/login", {
+      const res = await fetch( BASE_URL + "/users/login", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -50,7 +51,7 @@ export default function Login() {
           .digest("hex");
         sessionStorage.setItem("token", token);
         // Update the user with this token
-        const res = await fetch("http://localhost:5000/users/token", {
+        const res = await fetch( BASE_URL + "/users/token", {
           method: "POST",
           mode: "cors",
           headers: {

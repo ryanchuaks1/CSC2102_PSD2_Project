@@ -5,6 +5,7 @@ import Link from "next/link";
 import { isValidElement, useState } from "react";
 import { createHash } from "crypto";
 import Snackbar from "./components/snackbar";
+import { BASE_URL } from "@/constants";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -68,7 +69,7 @@ export default function Register() {
         .update(formData.password)
         .digest("hex");
       //Send Form
-      const res = await fetch("http://localhost:5000/shops/account/create", {
+      const res = await fetch( BASE_URL + "/shops/account/create", {
         method: "POST",
         mode: "cors",
         headers: {

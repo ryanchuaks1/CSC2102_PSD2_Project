@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ItemModal from "./item-modal";
 import Link from "next/link";
+import { BASE_URL } from "@/constants";
 
 export default function ShopInfo({
   restaurant,
@@ -37,7 +38,7 @@ export default function ShopInfo({
     async function fetchUser() {
       if (currentUser) {
         const res = await fetch(
-          `http://localhost:5000/users/token/${currentUser}`,
+          BASE_URL + `/users/token/${currentUser}`,
           {
             mode: "cors",
           }

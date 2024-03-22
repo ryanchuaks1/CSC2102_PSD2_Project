@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { BASE_URL } from "@/constants";
 
 export default function RowSection({ header }: { header: string }) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -10,7 +11,7 @@ export default function RowSection({ header }: { header: string }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch("http://localhost:5000/shops/top", {
+        const res = await fetch( BASE_URL + "/shops/top", {
           mode: "cors",
         });
 

@@ -4,6 +4,7 @@ import FrontendImage from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Snackbar from "./components/snackbar";
+import { BASE_URL } from "@/constants";
 
 export default function Edit() {
   const [formData, setFormData] = useState({
@@ -40,7 +41,7 @@ export default function Edit() {
         //Get the User
         const token = sessionStorage.getItem("token");
 
-        const user = await fetch(`http://localhost:5000/users/token/${token}`, {
+        const user = await fetch( BASE_URL + `/users/token/${token}`, {
           mode: "cors",
         });
 
@@ -53,7 +54,7 @@ export default function Edit() {
 
         //Get restaurant by user
         const res = await fetch(
-          `http://localhost:5000/users/shop/${userData.body._id}`,
+          BASE_URL + `/users/shop/${userData.body._id}`,
           {
             mode: "cors",
           }
@@ -164,7 +165,7 @@ export default function Edit() {
       //console.log("Shop ID: " + currShopId);
 
       //Send Form
-      const res = await fetch(`http://localhost:5000/shops/update`, {
+      const res = await fetch( BASE_URL + `/shops/update`, {
         method: "POST",
         mode: "cors",
         headers: {

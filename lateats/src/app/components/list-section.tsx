@@ -65,7 +65,7 @@ export default function ListSection({
   async function fetchNearbyShops(longitude: number, latitude: number) {
     try {
       console.log("My location: " + longitude + ", " + latitude);
-      const res = await fetch('http://localhost:5000/shops/nearby', {
+      const res = await fetch( BASE_URL + '/shops/nearby', {
         method: "POST",
         mode: 'cors',
         headers: {
@@ -91,7 +91,7 @@ export default function ListSection({
   //Search for Shops
   async function fetchSearchShops(query : string) {
     try {
-      const res = await fetch(`http://localhost:5000/shops/search?q=${encodeURIComponent(query)}`, {
+      const res = await fetch( BASE_URL + `/shops/search?q=${encodeURIComponent(query)}`, {
       mode: 'cors',
     });
     

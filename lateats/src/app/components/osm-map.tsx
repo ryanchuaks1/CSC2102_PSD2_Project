@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { error } from "console";
 import { captureRejectionSymbol } from "events";
+import { BASE_URL } from "@/constants";
 
 export default function Map({
   currPosition,
@@ -96,7 +97,7 @@ export default function Map({
   async function fetchSearchShops(query: string) {
     try {
       const res = await fetch(
-        `http://localhost:5000/shops/search?q=${encodeURIComponent(query)}`,
+        BASE_URL + `/shops/search?q=${encodeURIComponent(query)}`,
         {
           mode: "cors",
         }

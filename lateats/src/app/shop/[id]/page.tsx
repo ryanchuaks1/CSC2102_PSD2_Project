@@ -5,6 +5,7 @@ import Link from "next/link";
 import ItemGrid from "./components/item-grid";
 import ShopInfo from "./components/shop-info";
 import ShopHeader from "./components/shop-header";
+import { BASE_URL } from "@/constants";
 
 export default function Shop({ params }: { params: { id: string } }) {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -21,7 +22,7 @@ export default function Shop({ params }: { params: { id: string } }) {
   useEffect(() => {
     // Find the restaurant with the matching id
     async function fetchRestaurant() {
-      const res = await fetch(`http://localhost:5000/shops/view/${params.id}`, {
+      const res = await fetch( BASE_URL + `/shops/view/${params.id}`, {
         mode: "cors",
       });
       if (!res.ok) {

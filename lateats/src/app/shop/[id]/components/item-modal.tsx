@@ -1,5 +1,6 @@
 "use client";
 
+import { BASE_URL } from "@/constants";
 import { useEffect, useState } from "react";
 export default function ItemModal({
   item,
@@ -68,10 +69,10 @@ export default function ItemModal({
           let url: string;
           if (item) {
             console.log("Updating item");
-            url = `http://localhost:5000/items/update`;
+            url = BASE_URL + `/items/update`;
           } else {
             console.log("Creating new item");
-            url = `http://localhost:5000/items/create`;
+            url = BASE_URL + `/items/create`;
           }
           // Send Form
           const res = await fetch(url, {
