@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-  node_server:
-    # image: ghcr.io/leungwj/lateats-backend-server:latest
-    build:
-      context: ./backend/node_server
-      dockerfile: Dockerfile
-    container_name: node_server
+  backend-server:
+    image: ghcr.io/leungwj/lateats-backend-server:latest
+    # build:
+    #   context: ./backend/node_server
+    #   dockerfile: Dockerfile
+    container_name: backend-server
     restart: always
     ports:
       - '5000:5000'
@@ -43,17 +43,20 @@ services:
     depends_on:
       - mongodb
   
-  # lateats:
-  #   build:
-  #     context: ./lateats
-  #     dockerfile: Dockerfile
-  #   container_name: lateats
-  #   restart: always
-  #   ports:
-  #     - '3000:3000'
-  #   depends_on:
-  #     - node_server
-  #   command: npm run dev
+  frontend-server:
+    image: ghcr.io/leungwj/lateats-frontend-server:latest
+    # build:
+    #   context: ./lateats
+    #   dockerfile: Dockerfile
+    container_name: frontend-server
+    restart: always
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend-server
+    networks:
+      - intranet
+    command: npm run dev
 
 networks:
   intranet:

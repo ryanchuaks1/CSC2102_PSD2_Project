@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import FrontendImage from "next/image";
 import Link from "next/link";
 import { isValidElement, useState } from "react";
 import { createHash } from "crypto";
@@ -18,6 +18,7 @@ export default function Register() {
     closingTime: "",
     password: "",
     confirmPassword: "",
+    image: ""
   });
 
   //Snack bar variables
@@ -25,8 +26,45 @@ export default function Register() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === "image") {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFormData({ ...formData, [e.target.name]: reader.result });
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
+
+    //Wei Jun's Resize Function
+  function resizeImage(
+    image_src: string,
+    width: number,
+    height: number
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image() as HTMLImageElement;
+
+      img.onload = () => {
+        canvas.width = width;
+        canvas.height = height;
+        ctx?.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg"));
+      };
+
+      img.onerror = (error) => {
+        reject(error);
+      };
+
+      img.src = image_src;
+    });
+  }
 
   //Show Error Message
   const showErrorMessage = (message: string) => {
@@ -49,9 +87,14 @@ export default function Register() {
         formData.cuisine == "" ||
         formData.closingTime == "" ||
         formData.password == "" ||
-        formData.confirmPassword == ""
+        formData.confirmPassword == "" ||
+        formData.image == ""
       ) {
         throw new Error("Please fill in all fields"); // Set error message
+      }
+
+      if (formData.image != null) {
+        formData.image = await resizeImage(formData.image, 256, 256);
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -86,7 +129,7 @@ export default function Register() {
             discounttime: "2024-03-21T20:00:00Z",
             discount: 0,
             rating: 0,
-            picture: "https://picsum.photos/200/300",
+            picture: formData.image,
           },
           user: {
             email: formData.email,
@@ -119,7 +162,7 @@ export default function Register() {
             Discounted supper near 🫵
           </div>
 
-          <Image
+          <FrontendImage
             src="/supper.svg"
             width={500}
             height={500}
@@ -221,6 +264,17 @@ export default function Register() {
             name="confirmPassword"
             placeholder="Confirm Password"
             value={formData.confirmPassword}
+            onChange={handleChange}
+            className="border-b-2 border-primary p-2 m-2 mb-8"
+          ></input>
+
+          <div className="text-primary text-lg p-1 pl-3 lg:pl-4 ">
+            Shop Profile Picture:
+          </div>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
             onChange={handleChange}
             className="border-b-2 border-primary p-2 m-2 mb-8"
           ></input>

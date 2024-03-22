@@ -28,7 +28,7 @@ export default function Map({
   async function fetchNearbyData(longitude: number, latitude: number) {
     try {
       console.log("My location: " + longitude + ", " + latitude);
-      const res = await fetch("http://localhost:5000/shops/nearby", {
+      const res = await fetch( BASE_URL + "/shops/nearby", {
         method: "POST",
         mode: "cors",
         headers: {
@@ -53,7 +53,7 @@ export default function Map({
   //ELSE: Get all Shops
   async function fetchAllShops() {
     try {
-      const res = await fetch("http://localhost:5000/shops/index", {
+      const res = await fetch( BASE_URL + "/shops/index", {
         mode: "cors",
       });
 
