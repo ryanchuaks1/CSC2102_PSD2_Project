@@ -15,8 +15,8 @@ use **docker-compose down** to stop the containers
 use **docker-compose up -d --build node_server** to run up the containers while rebuilding the server image
 
 ## Steps to building docker image for Kubernetes
-1. Run **docker build -t <image-repo>:<tag> .** on the directory where the Dockerfile is at
-2. Run **docker push <image-repo>:<tag>** to push the built image to your repository
+1. Run **docker build -t (image-repo):(tag) .** on the directory where the Dockerfile is at
+2. Run **docker push (image-repo):(tag)** to push the built image to your repository
 
 ## Steps to running Kubernetes on all containers
 1. Run **kubectl apply -f ./namespace.yaml**
